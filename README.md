@@ -7,7 +7,7 @@ mac and linux support.<br>
 planed/added features<br>
 ☐ exe file [make it an exe file for easier use for none python users]<br>
 ☒ tabs [make all codes tabs for ease of use]<br>
-☐ Dark Mode [make dark mode for dark mode users]<br>
+☒ Dark Mode [make dark mode for dark mode users]<br>
 ☐ stop button [add a stop button so users can stop if thay want to]<br>
 ☐ limiter [make a limiter for the program to not freeze so users can press the stop button]<br>
 ☐ Progress bar and time left [add a progress bar and timer so user can se how much time is left before the code is done]<br>
