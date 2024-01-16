@@ -1,21 +1,21 @@
 # Arachneia
-This scripts are made for my own use, but if you find this scripts useful. have fun. This script is made only for windows in mind.
+This scripts are made for my own use, but if you find this scripts useful. have fun. This script is made only for windows in mind.<br>
 
-not going to do.
-mac and linux support.
+not going to do.<br>
+mac and linux support.<br>
 
-planed/added features
-☐ exe file [make it an exe file for easier use for none python users]
-☒ tabs [make all codes tabs for ease of use]
-☐ Dark Mode [make dark mode for dark mode users]
-☐ stop button [add a stop button so users can stop if thay want to]
-☐ limiter [make a limiter for the program to not freeze so users can press the stop button]
-☐ Progress bar and time left [add a progress bar and timer so user can se how much time is left before the code is done]
+planed/added features<br>
+☐ exe file [make it an exe file for easier use for none python users]<br>
+☒ tabs [make all codes tabs for ease of use]<br>
+☐ Dark Mode [make dark mode for dark mode users]<br>
+☐ stop button [add a stop button so users can stop if thay want to]<br>
+☐ limiter [make a limiter for the program to not freeze so users can press the stop button]<br>
+☐ Progress bar and time left [add a progress bar and timer so user can se how much time is left before the code is done]<br>
 
-planed/added script
-☐ url extractor [extracet url from text documents and showing wear thay are in your system]
-☐ date translator [translate dates with monts first for betther orginisation in pc system]
-☐ file copy [file strucure copy with only selected type of files]
-☐ FIle Date Adder [adds a date infront of a folder name, the date comes from a text document inside the folder]
-☐ file translator [translate files over to anather file type. example webm to mp4 or mov]
+planed/added script<br>
+☐ url extractor [extracet url from text documents and showing wear thay are in your system]<br>
+☐ date translator [translate dates with monts first for betther orginisation in pc system]<br>
+☐ file copy [file strucure copy with only selected type of files]<br>
+☐ FIle Date Adder [adds a date infront of a folder name, the date comes from a text document inside the folder]<br>
+☐ file translator [translate files over to anather file type. example webm to mp4 or mov]<br>
 
