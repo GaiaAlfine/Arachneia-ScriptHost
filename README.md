@@ -1,5 +1,5 @@
 # Arachneia
-the exe file will trigger windows firewall. it doesn't contain a virus.<br>
+The exe file will trigger windows firewall. it doesn't contain a virus.<br>
 
 This scripts are made for my own use, but if you find this scripts useful. have fun. This script is made only for windows in mind.<br>
 
