@@ -1,7 +1,3 @@
-The structure of your `README.md` for the project "Arachneia" looks quite decent, but there are a few areas that could be improved for clarity and professionalism. Here's a revised version with some suggestions:
-
----
-
 # Arachneia
 
 **Notice:** The executable file may trigger a warning from Windows Firewall. Please be assured it does not contain a virus.
@@ -25,13 +21,3 @@ This collection of scripts was originally created for personal use. However, if 
 - ☐ **File Copy**: Copy a specific file structure, selecting only certain types of files.
 - ☐ **File Date Adder**: Append dates to the front of folder names, based on a text document contained within the folder.
 - ☐ **File Translator**: Convert files to different formats, such as converting WEBM to MP4 or MOV.
-
----
-
-### Notes:
-1. **Clear Section Headers**: It's good to have clear, concise section headers.
-2. **Consistency in Formatting**: Use consistent formatting for lists and statuses (like planned/added features).
-3. **Explanation of Purpose**: It might be helpful to add a brief section explaining what the scripts do or the goal of the project, for those who stumble upon it without prior knowledge.
-4. **Spelling and Grammar**: Ensure that spelling and grammar are correct to present a professional appearance.
-
-This is just a suggested structure and you may modify it as per your project's specific needs and your personal style.
