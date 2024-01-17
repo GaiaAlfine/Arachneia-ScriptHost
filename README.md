@@ -3,7 +3,7 @@ The exe file will trigger windows firewall. it doesn't contain a virus.<br>
 
 This scripts are made for my own use, but if you find this scripts useful. have fun. This script is made only for windows in mind.<br>
 
-# not Supportet.<br>
+## not Supportet.<br>
 mac and linux support.<br>
 
 # planed/added features<br>
