@@ -38,13 +38,15 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(QWidget(), "Tab Two")
         self.tab_widget.addTab(QWidget(), "Tab Three")
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia")
+        self.setWindowTitle("Arachneia V0.03")
         self.resize(400, 600)
 
         # Set the window icon
-        self.setWindowIcon(QIcon('F:\Arachneia-main/Arachneia.ico'))  # Replace 'path_to_your_icon_file' with the actual path to your icon file.
+        self.setWindowIcon(QIcon('Arachneia/Arachneia.ico'))  # Replace 'path_to_your_icon_file' with the actual path to your icon file.
 
         self.tab_widget.currentChanged.connect(self.loadTab)
+
+        self.setupTabOne()
 
     def loadTab(self, index):
         """Load the content of the tab when it's selected."""
@@ -57,26 +59,38 @@ class MainWindow(QMainWindow):
 
     def setupTabOne(self):
         """Sets up content for Tab One."""
-        tab = self.tab_widget.widget(0)
-        layout = QVBoxLayout(tab)
-        label = QLabel("Content for Copy Files Tab")
-        layout.addWidget(label)
+        self.setupTab(0, "Tab One", self.runTabOneScript)
 
     def setupTabTwo(self):
-        """Sets up content for Tab One."""
-        tab = self.tab_widget.widget(0)
-        layout = QVBoxLayout(tab)
-        label = QLabel("Content for Copy Files Tab")
-        layout.addWidget(label)
+        """Sets up content for Tab Two."""
+        self.setupTab(1, "Tab Two", self.runTabTwoScript)
 
     def setupTabThree(self):
-        """Sets up content for Tab One."""
-        tab = self.tab_widget.widget(0)
+        """Sets up content for Tab Three."""
+        self.setupTab(2, "Tab Three", self.runTabThreeScript)
+
+    def setupTab(self, index, label_text, script_function):
+        """General method to set up a tab."""
+        tab = self.tab_widget.widget(index)
         layout = QVBoxLayout(tab)
-        label = QLabel("Content for Copy Files Tab")
+        label = QLabel(label_text)
         layout.addWidget(label)
-    
+        script_function()
+
+    def runTabOneScript(self):
+        # Your code for Tab One script here
+        pass
+
+    def runTabTwoScript(self):
+        # Your code for Tab Two script here
+        pass
+
+    def runTabThreeScript(self):
+        # Your code for Tab Three script here
+        pass
+
     def runScriptWithTimeout(self, script, timeout):
+
         """Run a script with a timeout to avoid freezing."""
         def target():
             # Here you can call your script
@@ -94,4 +108,3 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
-
