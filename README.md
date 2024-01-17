@@ -1,21 +1,23 @@
 # Arachneia
-This scripts are made for my own use, but if you find this scripts useful. have fun. This script is made only for windows in mind.<br>
 
-not going to do.<br>
-mac and linux support.<br>
+**Notice:** The executable file may trigger a warning from Windows Firewall. Please be assured it does not contain a virus.
 
-planed/added features<br>
-☐ exe file [make it an exe file for easier use for none python users]<br>
-☒ tabs [make all codes tabs for ease of use]<br>
-☒ Dark Mode [make dark mode for dark mode users]<br>
-☐ stop button [add a stop button so users can stop if thay want to]<br>
-☐ limiter [make a limiter for the program to not freeze so users can press the stop button]<br>
-☐ Progress bar and time left [add a progress bar and timer so user can se how much time is left before the code is done]<br>
+This collection of scripts was originally created for personal use. However, if you find them helpful, feel free to use and enjoy them. Please note that these scripts are designed specifically for Windows.
 
-planed/added script<br>
-☐ url extractor [extracet url from text documents and showing wear thay are in your system]<br>
-☐ date translator [translate dates with monts first for betther orginisation in pc system]<br>
-☐ file copy [file strucure copy with only selected type of files]<br>
-☐ FIle Date Adder [adds a date infront of a folder name, the date comes from a text document inside the folder]<br>
-☐ file translator [translate files over to anather file type. example webm to mp4 or mov]<br>
+## Not Supported
+- MacOS and Linux are not currently supported.
 
+## Planned/Added Features
+- ☐ **Executable File**: Convert scripts into an executable file for ease of use by non-Python users.
+- ☒ **Tabs**: Implement tabbed navigation for easier user interaction.
+- ☒ **Dark Mode**: Introduce a dark mode option for users who prefer it.
+- ☐ **Stop Button**: Add a feature allowing users to stop the script execution at any point.
+- ☐ **Limiter**: Implement a limiter to prevent the program from freezing, ensuring that users can always interact with the stop button.
+- ☐ **Progress Bar and Time Estimate**: Include a progress bar and an estimated time to completion for better user experience.
+
+## Planned/Added Scripts
+- ☐ **URL Extractor**: Extract URLs from text documents and identify their locations within your system.
+- ☐ **Date Translator**: Translate dates to a month-first format for better organization in PC systems.
+- ☐ **File Copy**: Copy a specific file structure, selecting only certain types of files.
+- ☐ **File Date Adder**: Append dates to the front of folder names, based on a text document contained within the folder.
+- ☐ **File Translator**: Convert files to different formats, such as converting WEBM to MP4 or MOV.

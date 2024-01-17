@@ -72,10 +72,13 @@ class MainWindow(QMainWindow):
         """Sets up content for Tab Three."""
         self.setupTab(2, "Tab Three", self.runTabThreeScript)
 
+<<<<<<< HEAD
     def setupTabFour(self):
         """Sets up content for Tab Four."""
         self.setupTab(3, "Tab Four", self.runTabFourScript)
 
+=======
+>>>>>>> f578d4721a2f204843583719f33bf66553074732
     def setupTab(self, index, label_text, script_function):
         """General method to set up a tab."""
         tab = self.tab_widget.widget(index)
@@ -96,10 +99,13 @@ class MainWindow(QMainWindow):
         # Your code for Tab Three script here
         pass
 
+<<<<<<< HEAD
     def runTabFourScript(self):
         # Your code for Tab four script here
         pass
 
+=======
+>>>>>>> f578d4721a2f204843583719f33bf66553074732
     def runScriptWithTimeout(self, script, timeout):
 
         """Run a script with a timeout to avoid freezing."""
