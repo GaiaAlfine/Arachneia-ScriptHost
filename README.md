@@ -6,7 +6,7 @@ This scripts are made for my own use, but if you find this scripts useful. have 
 ## not Supportet.<br>
 mac and linux support.<br>
 
-# planed/added features<br>
+## planed/added features<br>
 ☐ exe file [make it an exe file for easier use for none python users]<br>
 ☒ tabs [make all codes tabs for ease of use]<br>
 ☒ Dark Mode [make dark mode for dark mode users]<br>
@@ -14,7 +14,7 @@ mac and linux support.<br>
 ☐ limiter [make a limiter for the program to not freeze so users can press the stop button]<br>
 ☐ Progress bar and time left [add a progress bar and timer so user can se how much time is left before the code is done]<br>
 
-# planed/added script<br>
+## planed/added script<br>
 ☐ url extractor [extracet url from text documents and showing wear thay are in your system]<br>
 ☐ date translator [translate dates with monts first for betther orginisation in pc system]<br>
 ☐ file copy [file strucure copy with only selected type of files]<br>
