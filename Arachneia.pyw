@@ -1,7 +1,7 @@
 import sys
 import threading
 import os
-from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton
+from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QSizePolicy
 from PySide2.QtGui import QPalette, QColor, QIcon
 from PySide2.QtCore import Qt
 
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(QWidget(), "Tab Three")
         self.tab_widget.addTab(QWidget(), "Tab Four")
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia V0.03")
+        self.setWindowTitle("Arachneia V0.04")
         self.resize(400, 600)
 
         # Set the window icon
@@ -89,23 +89,27 @@ class MainWindow(QMainWindow):
 
         # Input label and text box
         input_textbox = QLineEdit()
-        input_textbox.setContentsMargins(0, 0, 0, 0)  # Set margins to zero
-        layout.addWidget(input_textbox, alignment=Qt.AlignTop)  # Add alignment to place widgets at the top
+        layout.addWidget(input_textbox)  # Remove alignment argument
 
         # Convert button
         convert_button = QPushButton("Convert")
-        convert_button.setContentsMargins(0, 0, 0, 0)  # Set margins to zero
-        layout.addWidget(convert_button, alignment=Qt.AlignTop)  # Align the button to the top
+        layout.addWidget(convert_button)  # Remove alignment argument
 
         # Output label (same as input textbox)
         output_textbox = QLineEdit()
-        output_textbox.setContentsMargins(0, 0, 0, 0)  # Set margins to zero
-        layout.addWidget(output_textbox, alignment=Qt.AlignTop)  # Align the output textbox to the top
+        layout.addWidget(output_textbox)  # Remove alignment argument
 
         # Set spacing and layout margins to zero
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
 
+        # Set the vertical size policy to Maximum for all widgets
+        input_textbox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        convert_button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        output_textbox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+
+        # Add stretch to push all widgets to the top
+        layout.addStretch(1)
 
 
         def convert_date():
