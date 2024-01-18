@@ -17,7 +17,7 @@ This collection of scripts was originally created for personal use. However, if 
 
 ## Planned/Added Scripts
 - ☐ **URL Extractor**: Extract URLs from text documents and identify their locations within your system.
-- ☐ **Date Translator**: Translate dates to a month-first format for better organization in PC systems.
+- ☒ **Date Translator**: Translate dates to a month-first format for better organization in PC systems.
 - ☐ **File Copy**: Copy a specific file structure, selecting only certain types of files.
 - ☐ **File Date Adder**: Append dates to the front of folder names, based on a text document contained within the folder.
 - ☐ **File Translator**: Convert files to different formats, such as converting WEBM to MP4 or MOV.
