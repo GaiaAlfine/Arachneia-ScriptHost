@@ -16,7 +16,7 @@ In Arachneia, we continuously strive to enhance user experience. Below is a list
 - ☐ **Stop Button**: Incorporation of a feature to halt script execution at any user-commanded point.
 - ☐ **Limiter**: A mechanism to prevent program freezing, ensuring consistent access to the stop button.
 - ☐ **Progress Bar and Time Estimate**: Integration of a progress indicator with a completion time estimate to enhance user experience.
-
+- ☐ **GUI**: make the Graphical User Interface cleaner and easier to navigate.
 ## Script Enhancements and Additions
 Arachneia is evolving, with plans to introduce new scripts and enhance existing ones:
 
