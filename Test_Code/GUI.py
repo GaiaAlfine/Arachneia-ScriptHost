@@ -9,7 +9,6 @@ from PySide2.QtCore import Qt, QSize
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
 
-
 def dark_palette():
     '''Create a dark palette for the application.'''
     palette = QPalette()
@@ -51,16 +50,16 @@ class MainWindow(QMainWindow):
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
         icons = [
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico')
+            QIcon('Arachneia/Favoritt.ico'),
+            QIcon('Arachneia/UrlExtactor.ico'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/'),
+            QIcon('Arachneia/')
         ]
 
         # Add tabs with icons
@@ -77,6 +76,7 @@ class MainWindow(QMainWindow):
 
     def loadTab(self, index):
         """Load the content of the tab when it's selected."""
+        print(f"Tab {index + 1} selected!")  
         if index == 0 and not self.tab_widget.widget(index).layout():
             self.setupTabOne()
         elif index == 1 and not self.tab_widget.widget(index).layout():
@@ -104,39 +104,39 @@ class MainWindow(QMainWindow):
 
     def setupTabTwo(self):
         """Sets up content for Tab Two."""
-        self.setupTab(1, "Tab Two", self.runTabTwoScript)
+        self.setupTab(1, self.runTabTwoScript)
 
     def setupTabThree(self):
         """Sets up content for Tab Three."""
-        self.setupTab(2, "Tab Three", self.runTabThreeScript)
+        self.setupTab(2, self.runTabThreeScript)
 
     def setupTabFour(self):
         """Sets up content for Tab Four."""
-        self.setupTab(3, "Tab Four", self.runTabFourScript)
+        self.setupTab(3, self.runTabFourScript)
 
     def setupTabFive(self):
         """Sets up content for Tab Four."""
-        self.setupTab(4, "Tab Four", self.runTabFourScript)
+        self.setupTab(4, self.runTabFourScript)
 
     def setupTabSix(self):
         """Sets up content for Tab Four."""
-        self.setupTab(5, "Tab Four", self.runTabFourScript)
+        self.setupTab(5, self.runTabFourScript)
 
     def setupTabSeven(self):
         """Sets up content for Tab Four."""
-        self.setupTab(6, "Tab Four", self.runTabFourScript)
+        self.setupTab(6, self.runTabFourScript)
 
     def setupTabEight(self):
         """Sets up content for Tab Four."""
-        self.setupTab(7, "Tab Four", self.runTabFourScript)
+        self.setupTab(7, self.runTabFourScript)
 
     def setupTabNine(self):
         """Sets up content for Tab Four."""
-        self.setupTab(8, "Tab Four", self.runTabFourScript)
+        self.setupTab(8, self.runTabFourScript)
 
     def setupTabTen(self):
         """Sets up content for Tab Four."""
-        self.setupTab(9, "Tab Four", self.runTabFourScript)
+        self.setupTab(9, self.runTabFourScript)
 
     def setupTab(self, index, script_function):
         """General method to set up a tab."""
@@ -145,98 +145,43 @@ class MainWindow(QMainWindow):
         script_function()
 
     def runTabOneScript(self):
-        
-        layout = QVBoxLayout()
-        self.textBrowser = QTextBrowser()
-        self.btnLoad = QPushButton('Load File')
-        self.btnSave = QPushButton('Save URLs')
-        layout.addWidget(self.textBrowser)
-        layout.addWidget(self.btnLoad)
-        layout.addWidget(self.btnSave)
-        centralWidget = QWidget()
-        centralWidget.setLayout(layout)
-        self.setCentralWidget(centralWidget)
-        self.btnLoad.clicked.connect(self.loadFile)
-        self.btnSave.clicked.connect(self.saveFile)
-        # Connect the anchorClicked signal to openUrl
-        self.textBrowser.anchorClicked.connect(self.openUrl)
-        # Set this to ensure QTextBrowser doesn't try to open links internally
-        self.textBrowser.setOpenLinks(False)
+        # Your script here
+        pass
 
-
-
-    def loadFile(self):
-        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder")
-        if folder_path:
-            all_formatted_entries = []
-            print(f"Selected folder: {folder_path}")  # Debugging output
-            for root, dirs, files in os.walk(folder_path):
-                for filename in files:
-                    if filename.endswith(".txt"):
-                        file_path = os.path.join(root, filename)
-                        folder_url = f'file:///{root}'  # URL for the folder
-                        try:
-                            with open(file_path, 'r', encoding='utf-8') as file:
-                                content = file.read()
-                                urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', content)
-                                if urls:
-                                    # Apply inline CSS to change the color to orange
-                                    formatted_entry = f'<a href="{folder_url}" style="color: #c77100;">From {filename} in [{root}]</a>:<br>' + '<br>'.join([f'<a href="{url}">{url}</a>' for url in urls]) + '<br><br>'
-                                    all_formatted_entries.append(formatted_entry)
-                                print(f"Found URLs in {filename}: {urls}")
-                        except UnicodeDecodeError:
-                            print(f"Could not read {filename} due to encoding issue")
-
-            # Set formatted URLs and clickable file paths with color styling as HTML in the QTextBrowser
-            self.textBrowser.setHtml(''.join(all_formatted_entries))
-            print("Final URL list:", all_formatted_entries)
-
-
-    def saveFile(self):
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Text Files (*.txt);;All Files (*)")
-        if file_name:
-            # Write URLs to the selected file, getting plain text from the QTextBrowser
-            with open(file_name, 'w') as file:
-                file.write(self.textBrowser.toPlainText())
-
-    def openUrl(self, url):
-        # Open the URL in the default web browser and prevent default action
-        QDesktopServices.openUrl(url)
-        
     def runTabTwoScript(self):
-        # Your code for Tab Two script here
+        # Your script here
         pass
 
     def runTabThreeScript(self):
-        # Your code for Tab Three script here
+        # Your script here
         pass
 
     def runTabFourScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
 
     def runTabFiveScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
 
     def runTabSixScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
 
     def runTabSevenScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
 
     def runTabEightScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
 
     def runTabNineScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
     
     def runTabTenScript(self):
-        # Your code for Tab four script here
+        # Your script here
         pass
 
     def runScriptWithTimeout(self, script, timeout):
