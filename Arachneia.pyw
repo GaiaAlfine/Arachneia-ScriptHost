@@ -1,10 +1,9 @@
 import sys
 import threading
 import os
-from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QSizePolicy
-from PySide2.QtGui import QPalette, QColor, QIcon
-from PySide2.QtCore import Qt
-
+from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QSizePolicy, QTabBar
+from PySide2.QtGui import QPalette, QColor, QIcon, QPainter, QPen
+from PySide2.QtCore import Qt, QSize, QRect
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
@@ -31,25 +30,87 @@ def dark_palette():
     palette.setColor(QPalette.Disabled, QPalette.WindowText, QColor(127, 127, 127))
     return palette
 
+class RotatedTabBar(QTabBar):
+    def tabSizeHint(self, index):
+        # Set your desired tab height and width here
+        return QSize(100, 100)  # Example: 100 width and 100 height
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        for index in range(self.count()):
+            tabRect = self.tabRect(index)
+            tabIcon = self.tabIcon(index)
+
+            # Draw the outline
+            outlineColor = Qt.gray if index != self.currentIndex() else Qt.white  # Change color for selected tab
+            painter.setPen(QPen(outlineColor, 2))
+            painter.drawRect(tabRect)
+
+            # Center the icon
+            iconSize = tabIcon.actualSize(tabRect.size())
+            iconX = (tabRect.width() - iconSize.width()) // 2
+            iconY = (tabRect.height() - iconSize.height()) // 2
+            iconRect = QRect(tabRect.x() + iconX, tabRect.y() + iconY, iconSize.width(), iconSize.height())
+
+            # Draw the icon
+            tabIcon.paint(painter, iconRect)
+
+class CustomTabWidget(QTabWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setTabBar(RotatedTabBar())  # Your custom RotatedTabBar
+        self.setTabPosition(QTabWidget.West)  # Tabs on the left
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        selectedTabIndex = self.currentIndex()
+        tabBarRect = self.tabBar().tabRect(selectedTabIndex)
+
+        # Draw border around content area
+        contentRect = self.rect()
+        contentRect.adjust(tabBarRect.width(), 0, 0, 0)  # Adjust to exclude tab bar area
+
+        # Set border color and style
+        painter.setPen(QPen(Qt.blue, 2))  # Example: blue border
+
+        # Draw the border, connecting it with the selected tab
+        painter.drawLine(contentRect.topLeft(), tabBarRect.bottomLeft())
+        painter.drawLine(contentRect.topRight(), contentRect.bottomRight())
+        painter.drawLine(contentRect.bottomLeft(), contentRect.bottomRight())
+
+        super().paintEvent(event)  # Call base class paint event
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.tab_widget = QTabWidget()
-        # Add tabs
-        self.tab_widget.addTab(QWidget(), "Date Converter")
-        self.tab_widget.addTab(QWidget(), "Tab Two")
-        self.tab_widget.addTab(QWidget(), "Tab Three")
-        self.tab_widget.addTab(QWidget(), "Tab Four")
+        self.tab_widget.setTabBar(RotatedTabBar())  # Use the custom tab bar
+        self.tab_widget.setTabPosition(QTabWidget.West)  # Move tabs to the left
+
+        # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
+        icons = [
+            QIcon('Arachneia/Arachneia.ico'),
+            QIcon('Arachneia/Arachneia.ico'),
+            QIcon('Arachneia/Arachneia.ico'),
+            QIcon('Arachneia/Arachneia.ico')
+        ]
+
+        # Add tabs with icons
+        for i in range(4):
+            tab = QWidget()
+            self.tab_widget.addTab(tab, icons[i], "")  # Empty string for no text
+
         self.setCentralWidget(self.tab_widget)
         self.setWindowTitle("Arachneia V0.04")
-        self.resize(400, 600)
-
-        # Set the window icon
-        self.setWindowIcon(QIcon('Arachneia/Arachneia.ico'))  # Replace 'path_to_your_icon_file' with the actual path to your icon file.
-
+        self.resize(1000, 600)
+        self.setWindowIcon(QIcon('Arachneia/Arachneia.ico'))
         self.tab_widget.currentChanged.connect(self.loadTab)
-
         self.setupTabOne()
+
+        # Adjust tab sizes
+        for i in range(self.tab_widget.count()):
+            self.tab_widget.tabBar().setBaseSize(QSize(100, 100))  # Set a fixed size for each tab
 
     def loadTab(self, index):
         """Load the content of the tab when it's selected."""
