@@ -90,10 +90,10 @@ class MainWindow(QMainWindow):
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
         icons = [
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico'),
-            QIcon('Arachneia/Arachneia.ico')
+            QIcon('Arachneia/icons/Arachneia.ico'),
+            QIcon('Arachneia/icons/Arachneia.ico'),
+            QIcon('Arachneia/icons/Arachneia.ico'),
+            QIcon('Arachneia/icons/Arachneia.ico')
         ]
 
         # Add tabs with icons

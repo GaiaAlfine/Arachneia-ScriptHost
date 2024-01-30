@@ -50,16 +50,16 @@ class MainWindow(QMainWindow):
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
         icons = [
-            QIcon('Arachneia/Favoritt.ico'),
-            QIcon('Arachneia/UrlExtactor.ico'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/'),
-            QIcon('Arachneia/')
+            QIcon('Arachneia/icons/Favoritt.ico'),
+            QIcon('Arachneia/icons/UrlExtactor.ico'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/')
         ]
 
         # Add tabs with icons
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(tab, icons[i], "")  # Empty string for no text
 
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia V0.04")
+        self.setWindowTitle("Arachneia V0.05")
         self.resize(1000, 600)
         self.setWindowIcon(QIcon('Arachneia/Arachneia.ico'))
         self.tab_widget.currentChanged.connect(self.loadTab)
