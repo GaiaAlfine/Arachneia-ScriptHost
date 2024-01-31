@@ -75,12 +75,8 @@ class MainWindow(QMainWindow):
             self.setWindowTitle("Arachneia V0.1.5 - Home")
         elif index == 1:
             self.setWindowTitle("Arachneia V0.1.5 - URL Extractor")
-            # Set custom text for this tab
-            self.setCustomText("Custom Text for URL Extractor")
         elif index == 2:
             self.setWindowTitle("Arachneia V0.1.5 - Date Translator")
-            # Set custom text for this tab
-            self.setCustomText("Custom Text for Date Translator")
 
     def setCustomText(self, custom_text):
         # Find the currently active tab widget
