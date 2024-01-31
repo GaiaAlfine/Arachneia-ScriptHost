@@ -4,7 +4,7 @@ import os
 import re
 from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QPushButton, QTabBar, QFileDialog, QTextBrowser, QProgressBar, QHBoxLayout, QLineEdit, QSizePolicy, QTextEdit
 from PySide2.QtGui import QPalette, QColor, QIcon, QDesktopServices
-from PySide2.QtCore import Qt, QSize, QThread, Signal
+from PySide2.QtCore import Qt, QSize, QThread, Signal, QUrl
 import markdown
 
 sys.argv += ['-platform', 'windows:darkmode=2']
@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
                             break
                         if filename.endswith(".txt"):
                             file_path = os.path.join(root, filename)
-                            folder_url = f'file:///{root}'
+                            folder_url = f'file:///{root}'.replace('\\', '/')
                             content = self.read_file_with_fallback_encodings(file_path)
                             if content is not None:
                                 urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', content)
@@ -263,6 +263,10 @@ class MainWindow(QMainWindow):
                 self.textBrowser.setPlaceholderText("Extracted URLs will be displayed here.")
                 self.progressBar.setMaximum(100)
 
+                # Connect the anchorClicked signal to the openUrl method
+                self.textBrowser.anchorClicked.connect(self.openUrl)  # Add this line
+                self.textBrowser.setOpenLinks(False)
+
                 # Button layout
                 buttonLayout = QHBoxLayout()
                 buttonLayout.addWidget(self.btnSelect)
@@ -307,9 +311,10 @@ class MainWindow(QMainWindow):
                     with open(file_name, 'w') as file:
                         file.write(self.textBrowser.toPlainText())
 
-            def openUrl(self, url):
-                # Open the URL in the default web browser and prevent default action
+            def openUrl(self, url: QUrl):
                 QDesktopServices.openUrl(url)
+
+
 
             def clearText(self):
                 self.textBrowser.clear()
