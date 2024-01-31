@@ -13,23 +13,23 @@ In Arachneia, we continuously strive to enhance user experience. Below is a list
 - ☐ **Executable File**: Transformation of scripts into an executable format, facilitating usage for individuals unfamiliar with Python.
 - ☒ **Tabs**: Implementation of a tabbed interface to streamline user navigation.
 - ☒ **Dark Mode**: Addition of a dark theme for user comfort, especially in low-light conditions.
-- ☐ **Stop Button**: Incorporation of a feature to halt script execution at any user-commanded point.
-- ☐ **Limiter**: A mechanism to prevent program freezing, ensuring consistent access to the stop button.
-- ☐ **Progress Bar and Time Estimate**: Integration of a progress indicator with a completion time estimate to enhance user experience.
-- ☐ **GUI**: make the Graphical User Interface cleaner and easier to navigate.
+- ☒ **Stop Button**: Incorporation of a feature to halt script execution at any user-commanded point.
+- ☒ **Limiter**: A mechanism to prevent program freezing, ensuring consistent access to the stop button.
+- ☒ **Progress Bar and Time Estimate**: Integration of a progress indicator with a completion time estimate to enhance user experience.
+- ☒ **GUI**: make the Graphical User Interface cleaner and easier to navigate.
 ## Script Enhancements and Additions
 Arachneia is evolving, with plans to introduce new scripts and enhance existing ones:
 
 ### URL Extractor
-- ☐ **Primary Function**: Extraction and identification of URLs from text documents.
-- ☐ **Interactive Interface**: A user-friendly button to select folders or text files for URL extraction.
+- ☒ **Primary Function**: Extraction and identification of URLs from text documents.
+- ☒ **Interactive Interface**: A user-friendly button to select folders or text files for URL extraction.
 - ☐ **Sorting Feature**: Options to sort URLs by website, date, name, or leave unsorted.
-- ☐ **Extraction Utility**: A tool to save extracted URLs into a .txt file.
-- ☐ **Navigational Path Display**: A clickable path above URLs to quickly access the folder containing the original URL.
+- ☒ **Extraction Utility**: A tool to save extracted URLs into a .txt file.
+- ☒ **Navigational Path Display**: A clickable path above URLs to quickly access the folder containing the original URL.
 - ☐ **Customization Options**: Settings to enable or disable clickable URLs and folder paths.
 
 ### Date Translator
-- ☒ **Translation Feature**: Converts dates into a month-first format (e.g., "Sep 20, 2011" to "09 20 2011").
+- ☐ **Translation Feature**: Converts dates into a month-first format (e.g., "Sep 20, 2011" to "09 20 2011").
 - ☐ **File Renaming Tool**: Renames folder structures based on text files within, selected dates, or creation dates.
 
 ### File Copy
