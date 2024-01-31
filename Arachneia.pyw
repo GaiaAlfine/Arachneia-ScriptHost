@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(tab, icons[i], "")  # Empty string for no text
 
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia V0.1.5 - Home")
+        self.setWindowTitle("Arachneia V0.1.6 - Home")
         self.resize(1000, 600)
         self.setWindowIcon(QIcon('Arachneia/icons/Arachneia.ico'))
         self.tab_widget.currentChanged.connect(self.loadTab)
@@ -72,11 +72,11 @@ class MainWindow(QMainWindow):
 
     def updateTitle(self, index):
         if index == 0:
-            self.setWindowTitle("Arachneia V0.1.5 - Home")
+            self.setWindowTitle("Arachneia V0.1.6 - Home")
         elif index == 1:
-            self.setWindowTitle("Arachneia V0.1.5 - URL Extractor")
+            self.setWindowTitle("Arachneia V0.1.6 - URL Extractor")
         elif index == 2:
-            self.setWindowTitle("Arachneia V0.1.5 - Date Translator")
+            self.setWindowTitle("Arachneia V0.1.6 - Date Translator")
 
     def setCustomText(self, custom_text):
         # Find the currently active tab widget
