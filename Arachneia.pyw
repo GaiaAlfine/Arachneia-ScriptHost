@@ -62,13 +62,45 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(tab, icons[i], "")  # Empty string for no text
 
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia V0.1.5")
+        self.setWindowTitle("Arachneia V0.1.5 - Home")
         self.resize(1000, 600)
         self.setWindowIcon(QIcon('Arachneia/icons/Arachneia.ico'))
         self.tab_widget.currentChanged.connect(self.loadTab)
         self.setupTabOne()
+        # Connect tab activation to custom title update
+        self.tab_widget.currentChanged.connect(self.updateTitle)
 
-    
+    def updateTitle(self, index):
+        if index == 0:
+            self.setWindowTitle("Arachneia V0.1.5 - Home")
+        elif index == 1:
+            self.setWindowTitle("Arachneia V0.1.5 - URL Extractor")
+            # Set custom text for this tab
+            self.setCustomText("Custom Text for URL Extractor")
+        elif index == 2:
+            self.setWindowTitle("Arachneia V0.1.5 - Date Translator")
+            # Set custom text for this tab
+            self.setCustomText("Custom Text for Date Translator")
+
+    def setCustomText(self, custom_text):
+        # Find the currently active tab widget
+        current_tab_index = self.tab_widget.currentIndex()
+        current_tab_widget = self.tab_widget.widget(current_tab_index)
+
+        # Clear any existing layout in the tab widget
+        if current_tab_widget.layout():
+            layout = current_tab_widget.layout()
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+
+        # Create and add a label with the custom text to the tab
+        label = QLabel(custom_text)
+        label.setAlignment(Qt.AlignCenter)
+        current_tab_widget.layout().addWidget(label)
+
 
     def loadTab(self, index):
         """Load the content of the tab when it's selected."""
