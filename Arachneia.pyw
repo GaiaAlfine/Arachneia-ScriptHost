@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tab_widget)
         self.setWindowTitle("Arachneia V0.1")
         self.resize(1000, 600)
-        self.setWindowIcon(QIcon('Arachneia/Arachneia.ico'))
+        self.setWindowIcon(QIcon('Arachneia/icons/Arachneia.ico'))
         self.tab_widget.currentChanged.connect(self.loadTab)
         self.setupTabOne()
 
