@@ -1,4 +1,4 @@
-# Arachneia
+# Arachneia V0.1.5
 
 **Notice:** When running the executable file, a warning may appear from Windows Firewall. This is a standard security prompt, and we assure you the file is virus-free.
 
@@ -29,7 +29,7 @@ Arachneia is evolving, with plans to introduce new scripts and enhance existing 
 - ☐ **Customization Options**: Settings to enable or disable clickable URLs and folder paths.
 
 ### Date Translator
-- ☐ **Translation Feature**: Converts dates into a month-first format (e.g., "Sep 20, 2011" to "09 20 2011").
+- ☒ **Translation Feature**: Converts dates into a month-first format (e.g., "Sep 20, 2011" to "09 20 2011").
 - ☐ **File Renaming Tool**: Renames folder structures based on text files within, selected dates, or creation dates.
 
 ### File Copy
