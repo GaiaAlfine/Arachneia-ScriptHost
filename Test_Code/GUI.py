@@ -50,9 +50,9 @@ class MainWindow(QMainWindow):
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
         icons = [
-            QIcon('Arachneia/icons/Favoritt.ico'),
-            QIcon('Arachneia/icons/UrlExtactor.ico'),
             QIcon('Arachneia/icons/'),
+            QIcon('Arachneia/icons/UrlExtactor.ico'),
+            QIcon('Arachneia/icons/dateTranslator.ico'),
             QIcon('Arachneia/icons/'),
             QIcon('Arachneia/icons/'),
             QIcon('Arachneia/icons/'),
@@ -73,6 +73,8 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('Arachneia/Arachneia.ico'))
         self.tab_widget.currentChanged.connect(self.loadTab)
         self.setupTabOne()
+
+    
 
     def loadTab(self, index):
         """Load the content of the tab when it's selected."""
