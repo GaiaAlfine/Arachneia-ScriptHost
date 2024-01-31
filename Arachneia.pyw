@@ -41,6 +41,17 @@ class RotatedTabBar(QTabBar):
         # Adjust icon size to fit within the 100x100 pixel tab
         self.setIconSize(QSize(80, 80))  # Adjust the size as needed
 
+import sys
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller."""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -51,9 +62,9 @@ class MainWindow(QMainWindow):
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
         icons = [
-            QIcon('Arachneia/icons/homeIcon.png'),
-            QIcon('Arachneia/icons/UrlExtactor.ico'),
-            QIcon('Arachneia/icons/dateTranslator.ico')
+            QIcon(resource_path('icons/homeIcon.png')),
+            QIcon(resource_path('icons/UrlExtactor.ico')),
+            QIcon(resource_path('icons/dateTranslator.ico'))
         ]
 
         # Add tabs with icons
@@ -64,7 +75,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tab_widget)
         self.setWindowTitle("Arachneia V0.1.6 - Home")
         self.resize(1000, 600)
-        self.setWindowIcon(QIcon('Arachneia/icons/Arachneia.ico'))
+        self.setWindowIcon(QIcon(resource_path('icons/Arachneia.ico')))
         self.tab_widget.currentChanged.connect(self.loadTab)
         self.setupTabOne()
         # Connect tab activation to custom title update
@@ -133,7 +144,7 @@ class MainWindow(QMainWindow):
 
         # Try to read the content of the readme.md file with UTF-8 encoding
         try:
-            with open('Arachneia/readme.md', 'r', encoding='utf-8') as file:
+            with open(resource_path('readme.md'), 'r', encoding='utf-8') as file:
                 readme_content = file.read()
             # Convert Markdown content to HTML
             readme_html = markdown.markdown(readme_content)
