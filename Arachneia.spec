@@ -5,7 +5,7 @@ a = Analysis(
     ['Arachneia.pyw'],
     pathex=[],
     binaries=[],
-    datas=[('icons', 'icons'), ('readme.md', '.')],
+    datas=[('resources/icons', 'resources/icons'), ('resources/readme.md', 'resources')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -34,5 +34,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['icons\\Arachneia.ico'],
+    icon=['resources\\icons\\Arachneia.ico'],
 )

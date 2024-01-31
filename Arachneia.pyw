@@ -61,16 +61,16 @@ class MainWindow(QMainWindow):
         self.tab_widget.setTabPosition(QTabWidget.West)  # Move tabs to the left
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
-        # icons = [
-        #     QIcon(resource_path('resources/icons/homeIcon.png')),
-        #     QIcon(resource_path('resources/icons/UrlExtactor.ico')),
-        #     QIcon(resource_path('resources/icons/dateTranslator.ico'))
-        # ] #this is for the exe
         icons = [
-            QIcon('Arachneia/resources/icons/homeIcon.png'),
-            QIcon('Arachneia/resources/icons/UrlExtactor.ico'),
-            QIcon('Arachneia/resources/icons/dateTranslator.ico')
-        ]
+            QIcon(resource_path('resources/icons/homeIcon.png')),
+            QIcon(resource_path('resources/icons/UrlExtactor.ico')),
+            QIcon(resource_path('resources/icons/dateTranslator.ico'))
+        ] #this is for the exe
+        # icons = [
+        #     QIcon('Arachneia/resources/icons/homeIcon.png'),
+        #     QIcon('Arachneia/resources/icons/UrlExtactor.ico'),
+        #     QIcon('Arachneia/resources/icons/dateTranslator.ico')
+        # ]
 
 
         # Add tabs with icons
@@ -79,9 +79,9 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(tab, icons[i], "")  # Empty string for no text
 
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia V0.1.6 - Home")
+        self.setWindowTitle("Arachneia V0.1.7 - Home")
         self.resize(1000, 600)
-        self.setWindowIcon(QIcon(resource_path('Arachneia/resources/icons/Arachneia.ico')))
+        self.setWindowIcon(QIcon(resource_path('resources/icons/Arachneia.ico')))
         self.tab_widget.currentChanged.connect(self.loadTab)
         self.setupTabOne()
         # Connect tab activation to custom title update
@@ -89,11 +89,11 @@ class MainWindow(QMainWindow):
 
     def updateTitle(self, index):
         if index == 0:
-            self.setWindowTitle("Arachneia V0.1.6 - Home")
+            self.setWindowTitle("Arachneia V0.1.7 - Home")
         elif index == 1:
-            self.setWindowTitle("Arachneia V0.1.6 - URL Extractor")
+            self.setWindowTitle("Arachneia V0.1.7 - URL Extractor")
         elif index == 2:
-            self.setWindowTitle("Arachneia V0.1.6 - Date Translator")
+            self.setWindowTitle("Arachneia V0.1.7 - Date Translator")
 
     def setCustomText(self, custom_text):
         # Find the currently active tab widget
@@ -150,10 +150,10 @@ class MainWindow(QMainWindow):
 
         # Try to read the content of the readme.md file with UTF-8 encoding
         try:
-            # with open(resource_path('resources/readme.md'), 'r', encoding='utf-8') as file:
-            #     readme_content = file.read() #this is for the exe
-            with open('Arachneia/resources/readme.md', 'r', encoding='utf-8') as file:
-                readme_content = file.read()
+            with open(resource_path('resources/readme.md'), 'r', encoding='utf-8') as file:
+                readme_content = file.read() #this is for the exe
+            # with open('Arachneia/resources/readme.md', 'r', encoding='utf-8') as file:
+            #     readme_content = file.read()
             # Convert Markdown content to HTML
             readme_html = markdown.markdown(readme_content)
         except FileNotFoundError:
