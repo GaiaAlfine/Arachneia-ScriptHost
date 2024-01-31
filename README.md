@@ -1,8 +1,17 @@
-# Arachneia V0.1.5
+# Arachneia V0.1.6
 
 **Notice:** When running the executable file, a warning may appear from Windows Firewall. This is a standard security prompt, and we assure you the file is virus-free.
 
 Arachneia is a suite of scripts developed initially for personal use, now made available for others who might find them beneficial. Please note, these scripts are tailored for Windows environments.
+
+## Update Notes
+- **Version 0.1.6 (URLs and Date)**:
+- Added URL Extracor and Date Translator.
+- Implemented a stop button to halt script execution at any point.
+- Added a progress bar and time estimate for better user feedback.
+- Improved the graphical user interface (GUI) for cleaner navigation.
+- Added title name for which tab the user is on.
+
 
 ## Compatibility
 - **Not Supported**: MacOS and Linux are not currently compatible with Arachneia.
