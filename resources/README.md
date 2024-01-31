@@ -19,7 +19,7 @@ Arachneia is a suite of scripts developed initially for personal use, now made a
 ## Features Overview
 In Arachneia, we continuously strive to enhance user experience. Below is a list of features we plan to add, along with those already integrated:
 
-- ☐ **Executable File**: Transformation of scripts into an executable format, facilitating usage for individuals unfamiliar with Python.
+- ☒ **Executable File**: Transformation of scripts into an executable format, facilitating usage for individuals unfamiliar with Python.
 - ☒ **Tabs**: Implementation of a tabbed interface to streamline user navigation.
 - ☒ **Dark Mode**: Addition of a dark theme for user comfort, especially in low-light conditions.
 - ☒ **Stop Button**: Incorporation of a feature to halt script execution at any user-commanded point.
