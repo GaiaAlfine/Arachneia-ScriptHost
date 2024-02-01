@@ -69,20 +69,20 @@ class MainWindow(QMainWindow):
         self.tab_widget.setTabPosition(QTabWidget.West)  # Move tabs to the left
 
         # Icons for tabs (replace 'icon_path' with the actual path to your icon files)
-        # icons = [
-        #     QIcon(resource_path('resources/icons/homeIcon.png')),
-        #     QIcon(resource_path('resources/icons/UrlExtactor.ico')),
-        #     QIcon(resource_path('resources/icons/dateTranslator.ico')),
-        #     QIcon(resource_path('Arachneia/resources/icons/FileCopy.png')),
-        #     QIcon(resource_path('Arachneia/resources/icons/mdscripticon.png'))
-        # ] #this is for the exe
         icons = [
-            QIcon('Arachneia/resources/icons/homeIcon.png'),
-            QIcon('Arachneia/resources/icons/UrlExtactor.ico'),
-            QIcon('Arachneia/resources/icons/dateTranslator.ico'),
-            QIcon('Arachneia/resources/icons/FileCopy.png'),
-            QIcon('Arachneia/resources/icons/mdscripticon.png')
-        ]
+            QIcon(resource_path('resources/icons/homeIcon.png')),
+            QIcon(resource_path('resources/icons/UrlExtactor.ico')),
+            QIcon(resource_path('resources/icons/dateTranslator.ico')),
+            QIcon(resource_path('resources/icons/FileCopy.png')),
+            QIcon(resource_path('resources/icons/mdscripticon.png'))
+        ] #this is for the exe
+        # icons = [
+        #     QIcon('Arachneia/resources/icons/homeIcon.png'),
+        #     QIcon('Arachneia/resources/icons/UrlExtactor.ico'),
+        #     QIcon('Arachneia/resources/icons/dateTranslator.ico'),
+        #     QIcon('Arachneia/resources/icons/FileCopy.png'),
+        #     QIcon('Arachneia/resources/icons/mdscripticon.png')
+        # ]
 
         # Add tabs with icons
         for i in range(5):
@@ -177,10 +177,10 @@ class MainWindow(QMainWindow):
 
         # Try to read the content of the readme.md file with UTF-8 encoding
         try:
-            # with open(resource_path('resources/readme.md'), 'r', encoding='utf-8') as file:
-            #     readme_content = file.read() #this is for the exe
-            with open('Arachneia/resources/readme.md', 'r', encoding='utf-8') as file:
-                readme_content = file.read()
+            with open(resource_path('resources/readme.md'), 'r', encoding='utf-8') as file:
+                readme_content = file.read() #this is for the exe
+            # with open('Arachneia/resources/readme.md', 'r', encoding='utf-8') as file:
+            #     readme_content = file.read()
             # Convert Markdown content to HTML
             readme_html = markdown.markdown(readme_content)
         except FileNotFoundError:
