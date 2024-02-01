@@ -1,10 +1,17 @@
-# Arachneia V0.1.7
+# Arachneia V0.2.0
 
 **Notice:** When running the executable file, a warning may appear from Windows Firewall. This is a standard security prompt, and we assure you the file is virus-free.
 
 Arachneia is a suite of scripts developed initially for personal use, now made available for others who might find them beneficial. Please note, these scripts are tailored for Windows environments.
 
-## Update Notes
+## Update notes V0.2.0
+- **Version 0.2.0 (File Copy and Markdown Editor)**:
+- Added File Copy and Markdown editor.
+- Fixed some names inside code.
+- Fixed some broken code inside **URL extractor**.
+- Made the program an executeble.
+
+## Update Notes V0.1.7
 - **Version 0.1.7 (URLs and Date)**:
 - Added URL Extracor and Date Translator.
 - Implemented a stop button to halt script execution at any point.
@@ -14,7 +21,7 @@ Arachneia is a suite of scripts developed initially for personal use, now made a
 
 
 ## Compatibility
-- **Not Supported**: MacOS and Linux are not currently compatible with Arachneia.
+- **Not Supported**: MacOS and Linux are not currently compatible with Arachneia. **Not tested**
 
 ## Features Overview
 In Arachneia, we continuously strive to enhance user experience. Below is a list of features we plan to add, along with those already integrated:
@@ -42,11 +49,11 @@ Arachneia is evolving, with plans to introduce new scripts and enhance existing 
 - ☐ **File Renaming Tool**: Renames folder structures based on text files within, selected dates, or creation dates.
 
 ### File Copy
-- ☐ **Structure Replication**: Copies a specified file structure, allowing selection of particular file types.
-- ☐ **Selective Copying Options**: 
-  - ☐ Avoid copying empty folders.
-  - ☐ Select specific files for copying.
-  - ☐ Option to copy all files into a single folder without replicating the original structure.
+- ☒ **Structure Replication**: Copies a specified file structure, allowing selection of particular file types.
+- ☒ **Selective Copying Options**: 
+  - ☒ Avoid copying empty folders.
+  - ☒ Select specific files for copying.
+  - ☒ Option to copy all files into a single folder without replicating the original structure.
 
 ### File Translator
 - ☐ **Multimedia Conversion Tools**:
