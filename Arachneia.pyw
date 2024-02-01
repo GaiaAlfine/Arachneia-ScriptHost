@@ -2,6 +2,8 @@ import sys
 import threading
 import os
 import re
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 from PySide2.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QPushButton, QTabBar, QFileDialog, QTextBrowser, 
     QProgressBar, QHBoxLayout, QLineEdit, QSizePolicy, QTextEdit, QButtonGroup, QScrollArea, QGridLayout
@@ -70,7 +72,9 @@ class MainWindow(QMainWindow):
         # icons = [
         #     QIcon(resource_path('resources/icons/homeIcon.png')),
         #     QIcon(resource_path('resources/icons/UrlExtactor.ico')),
-        #     QIcon(resource_path('resources/icons/dateTranslator.ico'))
+        #     QIcon(resource_path('resources/icons/dateTranslator.ico')),
+        #     QIcon(resource_path('Arachneia/resources/icons/FileCopy.png')),
+        #     QIcon(resource_path('Arachneia/resources/icons/mdscripticon.png'))
         # ] #this is for the exe
         icons = [
             QIcon('Arachneia/resources/icons/homeIcon.png'),
@@ -790,8 +794,11 @@ class MainWindow(QMainWindow):
             @Slot()
             def updatePreview(self):
                 md_text = self.editor.toPlainText()
+                current_scroll_position = self.preview.verticalScrollBar().value()  # Store current scroll position
                 html_content = markdown.markdown(md_text)
                 self.preview.setHtml(html_content)
+                self.preview.verticalScrollBar().setValue(current_scroll_position)  # Set back the scroll position
+
             
             def openFile(self):
                 filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Markdown files (*.md)")

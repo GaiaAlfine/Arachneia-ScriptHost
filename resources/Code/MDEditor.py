@@ -56,8 +56,11 @@ class MarkdownEditor(QMainWindow):
     @Slot()
     def updatePreview(self):
         md_text = self.editor.toPlainText()
+        current_scroll_position = self.preview.verticalScrollBar().value()  # Store current scroll position
         html_content = markdown.markdown(md_text)
         self.preview.setHtml(html_content)
+        self.preview.verticalScrollBar().setValue(current_scroll_position)  # Set back the scroll position
+
     
     def openFile(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Markdown files (*.md)")

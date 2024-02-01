@@ -1,17 +1,23 @@
 # Arachneia V0.2.0
 
+---
+
 **Notice:** When running the executable file, a warning may appear from Windows Firewall. This is a standard security prompt, and we assure you the file is virus-free.
 
 Arachneia is a suite of scripts developed initially for personal use, now made available for others who might find them beneficial. Please note, these scripts are tailored for Windows environments.
 
-## Update notes V0.2.0
+---
+
+##Updats
+
+### Update notes V0.2.0
 - **Version 0.2.0 (File Copy and Markdown Editor)**:
 - Added File Copy and Markdown editor.
 - Fixed some names inside code.
 - Fixed some broken code inside **URL extractor**.
 - Made the program an executeble.
 
-## Update Notes V0.1.7
+### Update Notes V0.1.7
 - **Version 0.1.7 (URLs and Date)**:
 - Added URL Extracor and Date Translator.
 - Implemented a stop button to halt script execution at any point.
@@ -19,9 +25,12 @@ Arachneia is a suite of scripts developed initially for personal use, now made a
 - Improved the graphical user interface (GUI) for cleaner navigation.
 - Added title name for which tab the user is on.
 
+---
 
 ## Compatibility
 - **Not Supported**: MacOS and Linux are not currently compatible with Arachneia. **Not tested**
+
+---
 
 ## Features Overview
 In Arachneia, we continuously strive to enhance user experience. Below is a list of features we plan to add, along with those already integrated:
@@ -33,6 +42,9 @@ In Arachneia, we continuously strive to enhance user experience. Below is a list
 - ☒ **Limiter**: A mechanism to prevent program freezing, ensuring consistent access to the stop button.
 - ☒ **Progress Bar and Time Estimate**: Integration of a progress indicator with a completion time estimate to enhance user experience.
 - ☒ **GUI**: make the Graphical User Interface cleaner and easier to navigate.
+
+---
+
 ## Script Enhancements and Additions
 Arachneia is evolving, with plans to introduce new scripts and enhance existing ones:
 
@@ -62,3 +74,9 @@ Arachneia is evolving, with plans to introduce new scripts and enhance existing 
   - ☐ GIF to video conversion.
   - ☐ Creation of GIFs/videos from a folder of images.
   - ☐ Decomposition of GIFs/videos into individual images.
+  
+### Markdown Editor 
+- ☒**Markdown Editor**
+- ☒ Made it possible to edit Markdown within the code. 
+- ☒ Added a preview for what it would look like. 
+- ☒ Fixed the edit point so that it doesn't move when you edit text.
