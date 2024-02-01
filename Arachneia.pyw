@@ -11,6 +11,8 @@ from PySide2.QtCore import Qt, QSize, QThread, Signal, QUrl, QObject, QThread, S
 import markdown
 import shutil
 
+version = "V0.2.0"
+
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
 
@@ -84,7 +86,7 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(tab, icons[i], "")  # Empty string for no text
 
         self.setCentralWidget(self.tab_widget)
-        self.setWindowTitle("Arachneia V0.1.7 - Home")
+        self.setWindowTitle(f"Arachneia {version} - Home")
         self.resize(1000, 600)
         self.setWindowIcon(QIcon(resource_path('resources/icons/Arachneia.ico')))
         self.tab_widget.currentChanged.connect(self.loadTab)
@@ -94,15 +96,15 @@ class MainWindow(QMainWindow):
 
     def updateTitle(self, index):
         if index == 0:
-            self.setWindowTitle("Arachneia V0.1.7 - Home")
+            self.setWindowTitle(f"Arachneia {version} - Home")
         elif index == 1:
-            self.setWindowTitle("Arachneia V0.1.7 - URL Extractor")
+            self.setWindowTitle(f"Arachneia {version} - URL Extractor")
         elif index == 2:
-            self.setWindowTitle("Arachneia V0.1.7 - Date Translator")
+            self.setWindowTitle(f"Arachneia {version} - Date Translator")
         elif index == 3:
-            self.setWindowTitle("Arachneia V0.1.7 - File Copy")
+            self.setWindowTitle(f"Arachneia {version} - File Copy")
         elif index == 4:
-            self.setWindowTitle("Arachneia V0.1.7 - Markdown Editor")
+            self.setWindowTitle(f"Arachneia {version} - Markdown Editor")
 
     def setCustomText(self, custom_text):
         # Find the currently active tab widget
