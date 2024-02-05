@@ -72,8 +72,8 @@ Arachneia/<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── icon.png<br>
 
 ## Updates
->###Update notes V0.3.0
-- **Core Changes**
+>###Update notes V0.2.9
+- **Core Changes Programing**
 - Changed the core of the program. now the program runs scripts form a folder called scripts.
 
 >### Update notes V0.2.0

@@ -5,7 +5,7 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QS
 from PySide2.QtGui import QPalette, QColor, QIcon
 from PySide2.QtCore import QSize
 
-Ver = "V0.3.0" # This is the version number for this application.
+Ver = "V0.2.9" # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
