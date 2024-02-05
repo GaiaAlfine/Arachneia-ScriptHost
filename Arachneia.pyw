@@ -1,11 +1,30 @@
 import sys
 import os
 import json
+import markdown
 from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QMessageBox
 from PySide2.QtGui import QPalette, QColor, QIcon
 from PySide2.QtCore import QSize
 
-Ver = "V0.2.9" # This is the version number for this application.
+##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
+#pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" Arachneia.pyw
+
+if getattr(sys, 'frozen', False):
+    # Running in a bundle
+    application_path = os.path.dirname(sys.executable)
+else:
+    # Running in a normal Python environment
+    application_path = os.path.dirname(os.path.abspath(__file__))
+
+config_path = os.path.join(application_path, 'tab_config.json')
+
+# Paths for external resources
+config_path = os.path.join(application_path, 'tab_config.json')
+icon_path = os.path.join(application_path, 'icons', 'Arachneia.ico')
+scripts_path = os.path.join(application_path,'scripts')
+
+
+Ver = "V1.0.0" # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
@@ -44,7 +63,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(f"Arachneia - {Ver}")
-        self.setWindowIcon(QIcon('Arachneia/icons/Arachneia.ico'))
+        self.setWindowIcon(QIcon(icon_path))
         self.resize(1000, 600)
         
         self.tab_widget = QTabWidget()
@@ -56,12 +75,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tab_widget)
 
     def loadTabsFromConfig(self):
-        config_path = 'Arachneia/tab_config.json'
-        if not os.path.exists(config_path):
+        if not os.path.exists(config_path):  # Use the variable 'config_path'
             print("Configuration file not found.")
             return
-        
-        with open(config_path, 'r') as config_file:
+
+        with open(config_path, 'r') as config_file:  # Open with 'config_path'
             tab_config = json.load(config_file)
         
         for tab_info in tab_config:

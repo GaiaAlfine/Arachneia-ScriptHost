@@ -1,0 +1,12 @@
+[
+    {
+        "name": "URl Extractor",
+        "icon": "icons/UrlExtactor.ico",
+        "script": "URLExtractor"
+    },
+    {
+        "name": "File Copy",
+        "icon": "icons/fileCopy.png",
+        "script": "FIleCopy"
+    }
+]

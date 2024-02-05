@@ -8,5 +8,10 @@
         "name": "URl Extractor",
         "icon": "Arachneia/icons/UrlExtactor.ico",
         "script": "URLExtractor"
+    },
+    {
+        "name": "File Copy",
+        "icon": "Arachneia/icons/fileCopy.png",
+        "script": "FIleCopy"
     }
 ]
