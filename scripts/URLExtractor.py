@@ -64,7 +64,8 @@ def get_tab_widget():
     btnStop = QPushButton('Stop')
     
     progressBar = QProgressBar()
-    progressBar.setTextVisible(False)
+    progressBar.setTextVisible(True)
+    progressBar.setFormat("Processing: %p%")  # Optional: Customize the text format
 
     textBrowser = QTextBrowser()
     textBrowser.setPlaceholderText("Extracted URLs will be displayed here.")
