@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Script One",
+    "path": "ara.scripts.urlextactor",
+    "gui_entry": "get_widget",
+    "icon": "path/to/icon.ico"
+  }
+]

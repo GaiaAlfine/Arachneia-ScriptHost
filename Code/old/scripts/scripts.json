@@ -1,0 +1,9 @@
+[
+    {
+      "name": "Script One",
+      "path": "scripts.script1",
+      "gui_entry": "main_widget",
+      "icon": "icons/script1.ico"
+    }
+  ]
+  
