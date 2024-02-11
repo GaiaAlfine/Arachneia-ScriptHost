@@ -1,18 +1,19 @@
 import sys
 import re
 import os
-from PySide2.QtWidgets import QPushButton, QFileDialog, QTextBrowser, QVBoxLayout, QWidget, QLabel, QProgressBar, QHBoxLayout, QApplication
+from PySide2.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QTextBrowser, QVBoxLayout, QWidget, QLabel, QProgressBar, QHBoxLayout
 from PySide2.QtGui import QDesktopServices
 from PySide2.QtCore import Qt, QThread, Signal
 
 class URLExtractionThread(QThread):
     url_found = Signal(str)
-    progress_updated = Signal(int)
+    progress_updated = Signal(int)  # Signal to emit progress percentage
     stop_flag = False
 
     def __init__(self, folder_path):
         super().__init__()
         self.folder_path = folder_path
+        self.stop_flag = False
 
     def run(self):
         self.stop_flag = False
@@ -27,16 +28,17 @@ class URLExtractionThread(QThread):
                     break
                 if filename.endswith(".txt"):
                     file_path = os.path.join(root, filename)
+                    folder_url = f'file:///{root}'
                     content = self.read_file_with_fallback_encodings(file_path)
-                    if content:
+                    if content is not None:
                         urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', content)
-                        folder_url = f'file:///{root}'
                         if urls:
                             formatted_entry = f'<a href="{folder_url}" style="color: #c77100;">From {filename} in [{root}]</a>:<br>' + '<br>'.join([f'<a href="{url}">{url}</a>' for url in urls]) + '<br><br>'
                             self.url_found.emit(formatted_entry)
                 processed_files += 1
                 progress = int((processed_files / total_files) * 100)
                 self.progress_updated.emit(progress)
+
 
     def read_file_with_fallback_encodings(self, file_path):
         encodings = ['utf-8', 'iso-8859-1', 'windows-1252']
@@ -46,77 +48,99 @@ class URLExtractionThread(QThread):
                     return file.read()
             except UnicodeDecodeError:
                 continue
+        print(f"Could not read {file_path} due to encoding issue")
         return None
-
+    
     def stop(self):
         self.stop_flag = True
 
-def get_tab_widget():
-    widget = QWidget()
-    layout = QVBoxLayout(widget)
+class URLExtractorApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-    titleLabel = QLabel('URL Extractor')
-    titleLabel.setAlignment(Qt.AlignCenter)
+    def initUI(self):
+        self.setWindowTitle('URL Extractor')
+        self.setGeometry(300, 300, 600, 400)
 
-    btnSelect = QPushButton('Select Folder')
-    btnExport = QPushButton('Export URLs')
-    btnClear = QPushButton('Clear')
-    btnStop = QPushButton('Stop')
-    
-    progressBar = QProgressBar()
-    progressBar.setTextVisible(True)
-    progressBar.setFormat("Processing: %p%")  # Optional: Customize the text format
+        layout = QVBoxLayout()
 
-    textBrowser = QTextBrowser()
-    textBrowser.setPlaceholderText("Extracted URLs will be displayed here.")
+        # Title text at the top, use a QLabel for this
+        self.titleLabel = QLabel('URL Extractor')
+        self.titleLabel.setAlignment(Qt.AlignCenter)
 
-    buttonLayout = QHBoxLayout()
-    buttonLayout.addWidget(btnSelect)
-    buttonLayout.addWidget(btnExport)
-    buttonLayout.addWidget(btnClear)
-    buttonLayout.addWidget(btnStop)
+        # Create buttons as per the new layout
+        self.btnSelect = QPushButton('Select')
+        self.btnExport = QPushButton('Export')
+        self.btnClear = QPushButton('Clear')
+        self.btnStop = QPushButton('Stop')
 
-    layout.addWidget(titleLabel)
-    layout.addLayout(buttonLayout)
-    layout.addWidget(progressBar)
-    layout.addWidget(textBrowser)
+        # Create a progress bar and hide the percentage text
+        self.progressBar = QProgressBar()
+        self.progressBar.setTextVisible(False)  # Hide the percentage text
 
-    extractionThread = None
+        # Modify textBrowser to display URLs
+        self.textBrowser = QTextBrowser()
+        self.textBrowser.setPlaceholderText("Extracted URLs will be displayed here.")
+        self.progressBar.setMaximum(100)
+        # Button layout
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(self.btnSelect)
+        buttonLayout.addWidget(self.btnExport)
+        buttonLayout.addWidget(self.btnClear)
 
-    def loadFile():
-        folder_path = QFileDialog.getExistingDirectory(widget, "Select Folder")
+        # Add widgets to the main layout
+        layout.addWidget(self.titleLabel)
+        layout.addLayout(buttonLayout)
+        layout.addWidget(self.progressBar)
+        layout.addWidget(self.textBrowser)
+        layout.addWidget(self.btnStop)
+
+        centralWidget = QWidget()
+        centralWidget.setLayout(layout)
+        self.setCentralWidget(centralWidget)
+
+        # Connect buttons to their functions
+        self.btnSelect.clicked.connect(self.loadFile)
+        self.btnExport.clicked.connect(self.saveFile)
+        self.btnClear.clicked.connect(self.clearText)
+        self.btnStop.clicked.connect(self.stopOperation)
+        
+    def loadFile(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder")
         if folder_path:
-            nonlocal extractionThread
-            textBrowser.setText("Processing files... Please wait.")
-            
-            # Initialize the progress bar at the start of the loading operation
-            progressBar.setValue(0)  # Set the progress bar to 0 to indicate the start
-            
-            extractionThread = URLExtractionThread(folder_path)
-            extractionThread.url_found.connect(lambda url: textBrowser.append(url))
-            extractionThread.progress_updated.connect(progressBar.setValue)
-            extractionThread.start()
+            self.textBrowser.setText("Processing files... Please wait.")
+            self.extractionThread = URLExtractionThread(folder_path)
+            self.extractionThread.url_found.connect(self.updateTextBrowser)
+            self.extractionThread.progress_updated.connect(self.updateProgressBar)
+            self.extractionThread.start()
 
 
-    def saveFile():
-        file_name, _ = QFileDialog.getSaveFileName(widget, "Save File", "", "Text Files (*.txt);;All Files (*)")
+    def updateProgressBar(self, value):
+        self.progressBar.setValue(value)
+
+    def updateTextBrowser(self, formatted_entry):
+        self.textBrowser.append(formatted_entry)
+
+    def saveFile(self):
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Text Files (*.txt);;All Files (*)")
         if file_name:
+            # Write URLs to the selected file, getting plain text from the QTextBrowser
             with open(file_name, 'w') as file:
-                file.write(textBrowser.toPlainText())
+                file.write(self.textBrowser.toPlainText())
 
-    def clearText():
-        progressBar.setValue(0) 
-        textBrowser.clear()
+    def openUrl(self, url):
+        # Open the URL in the default web browser and prevent default action
+        QDesktopServices.openUrl(url)
 
-    def stopOperation():
-        if extractionThread and extractionThread.isRunning():
-            progressBar.setValue(100)
-            extractionThread.stop()
-            
+    def clearText(self):
+        self.textBrowser.clear()
 
-    btnSelect.clicked.connect(loadFile)
-    btnExport.clicked.connect(saveFile)
-    btnClear.clicked.connect(clearText)
-    btnStop.clicked.connect(stopOperation)
+    def stopOperation(self):
+        if hasattr(self, 'extractionThread') and self.extractionThread.isRunning():
+            self.extractionThread.stop()
 
+def get_tab_widget():
+    widget = URLExtractorApp()
     return widget
+

@@ -13,5 +13,15 @@
         "name": "File Copy",
         "icon": "Arachneia/icons/fileCopy.png",
         "script": "FIleCopy"
+    },
+    {
+        "name": "Markdown Editor",
+        "icon": "Arachneia/icons/",
+        "script": "markdownedditor"
+    },
+    {
+        "name": "Example_of_strucure",
+        "icon": "Arachneia/icons/fileCopy.png",
+        "script": "Example_of_strucure"
     }
 ]

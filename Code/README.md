@@ -16,45 +16,25 @@ Arachneia is a PyQt/PySide2-based desktop application that serves as a host for 
 
 ## Tutorial
 
-The following steps outline how to create and integrate scripts into Arachneia, ensuring they adhere to the application's structure and functionality requirements.
+###First create a code with the normal code structure with a gui using pyside2
 
-### Step 1: Understanding the Requirements
+###Then change the end of the code.
 
-Before creating a script, it's essential to understand the expectations regarding functionality, interface, interactions, and dependencies.
+before: 
+>
+app = QApplication(sys.argv)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mainWindow = URLExtractorApp()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mainWindow.show()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sys.exit(app.exec_())<br>
 
-### Step 2: Setting Up the Script File
 
-Scripts should be self-contained Python files placed within the `scripts` directory, each providing a specific piece of functionality.
-
-### Step 3: Designing the GUI Component
-
-Scripts should use PyQt/PySide2 classes to design their GUI components, typically by subclassing `QWidget` or `QDialog`.
-
-**python**<br>
-
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QLabel<br>
-
-class MyScriptWidget(QWidget):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, parent=None):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(parent)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.layout = QVBoxLayout(self)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.label = QLabel("Hello from My Script")<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.layout.addWidget(self.label)<br>
-
-### Step 4: Creating the Entry Function
-
-Each script must define a function, `get_tab_widget()`, that returns its main GUI component.
-
-**python**<br>
-
+After: 
+>
 def get_tab_widget():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return MyScriptWidget()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; widget = URLExtractorApp()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return widget<br>
 
-
-### Step 5 to 8: Further Steps
-
-These steps include handling dependencies, testing the script independently, documenting the code, and properly integrating the script into Arachneia following the main application's guidelines.
-
+---
 ## File Structure
 
 Arachneia/<br>

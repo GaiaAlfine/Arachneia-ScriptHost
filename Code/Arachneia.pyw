@@ -9,22 +9,22 @@ from PySide2.QtCore import QSize
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" Arachneia.pyw
 
+#this also works but when i insert a markdown script the program crahes. 
+#pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" --hidden-import=markdown Arachneia.pyw
+
 if getattr(sys, 'frozen', False):
-    # Running in a bundle
     application_path = os.path.dirname(sys.executable)
 else:
-    # Running in a normal Python environment
     application_path = os.path.dirname(os.path.abspath(__file__))
 
 config_path = os.path.join(application_path, 'tab_config.json')
 
-# Paths for external resources
 config_path = os.path.join(application_path, 'tab_config.json')
 icon_path = os.path.join(application_path, 'icons', 'Arachneia.ico')
 scripts_path = os.path.join(application_path,'scripts')
 
 
-Ver = "V1.0.0" # This is the version number for this application.
+Ver = "V1.0.5" # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
@@ -53,11 +53,11 @@ def dark_palette():
 
 class RotatedTabBar(QTabBar):
     def tabSizeHint(self, index):
-        return QSize(100, 100)  # Set a fixed size for each tab
+        return QSize(100, 100)
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setIconSize(QSize(80, 80))  # Adjust the size as needed
+        self.setIconSize(QSize(80, 80))
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -75,11 +75,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tab_widget)
 
     def loadTabsFromConfig(self):
-        if not os.path.exists(config_path):  # Use the variable 'config_path'
+        if not os.path.exists(config_path):
             print("Configuration file not found.")
             return
 
-        with open(config_path, 'r') as config_file:  # Open with 'config_path'
+        with open(config_path, 'r') as config_file:
             tab_config = json.load(config_file)
         
         for tab_info in tab_config:
@@ -87,21 +87,19 @@ class MainWindow(QMainWindow):
     
     def addTabFromInfo(self, tab_info):
         try:
-            # Attempt to dynamically import the module specified in the config
             script_module = __import__(f"scripts.{tab_info['script']}", fromlist=[''])
             
-            # Assume the module provides a function or class that returns a QWidget
-            tab_content = script_module.get_tab_widget()  # Ensure this function is defined in each script module
+            tab_content = script_module.get_tab_widget()
             
             icon_path = tab_info.get('icon', '')
             tab_text = tab_info.get('name', 'Unnamed Tab')
             
             if os.path.exists(icon_path):
                 icon = QIcon(icon_path)
-                tab_index = self.tab_widget.addTab(tab_content, icon, "")  # Set text to empty if icon exists
+                tab_index = self.tab_widget.addTab(tab_content, icon, "") 
             else:
-                icon = QIcon()  # Use a default icon or none
-                tab_index = self.tab_widget.addTab(tab_content, icon, tab_text)  # Set text if no icon exists
+                icon = QIcon()
+                tab_index = self.tab_widget.addTab(tab_content, icon, tab_text)
             
             self.tab_widget.setTabToolTip(tab_index, tab_text)
         

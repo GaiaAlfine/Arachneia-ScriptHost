@@ -1,4 +1,4 @@
-('F:\\code\\Arachneia\\build\\Arachneia\\PYZ-00.pyz',
+('F:\\code\\Arachneia\\Code\\build\\Arachneia\\PYZ-00.pyz',
  [('PySide2',
    'C:\\Users\\gabri\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PySide2\\__init__.py',
    'PYMODULE'),
