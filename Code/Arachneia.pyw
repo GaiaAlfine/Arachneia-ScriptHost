@@ -1,10 +1,11 @@
 import sys
 import os
-import json
-import markdown
+import importlib.util
+import glob
 from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QMessageBox
 from PySide2.QtGui import QPalette, QColor, QIcon
 from PySide2.QtCore import QSize
+
 
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" Arachneia.pyw
@@ -12,25 +13,22 @@ from PySide2.QtCore import QSize
 #this also works but when i insert a markdown script the program crahes. 
 #pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" --hidden-import=markdown Arachneia.pyw
 
+# Configuration paths and application version
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-config_path = os.path.join(application_path, 'tab_config.json')
-
-config_path = os.path.join(application_path, 'tab_config.json')
 icon_path = os.path.join(application_path, 'icons', 'Arachneia.ico')
-scripts_path = os.path.join(application_path,'scripts')
+scripts_path = os.path.join(application_path, 'scripts')
 
 
-Ver = "V1.0.5" # This is the version number for this application.
+Ver = "V1.1.0" # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
 
 def dark_palette():
-    '''Enhance the dark palette for the application to ensure dark mode in tabs.'''
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(35, 35, 35))
     palette.setColor(QPalette.WindowText, QColor(220, 220, 220))
@@ -67,58 +65,45 @@ class MainWindow(QMainWindow):
         self.resize(1000, 600)
         
         self.tab_widget = QTabWidget()
-        self.tab_widget.setTabBar(RotatedTabBar())  
-        self.tab_widget.setTabPosition(QTabWidget.West)  
+        self.tab_widget.setTabBar(RotatedTabBar())
+        self.tab_widget.setTabPosition(QTabWidget.West)
         
-        self.loadTabsFromConfig()
+        self.loadScriptsAsTabs()
         
         self.setCentralWidget(self.tab_widget)
 
-    def loadTabsFromConfig(self):
-        if not os.path.exists(config_path):
-            print("Configuration file not found.")
-            return
+    def loadScriptsAsTabs(self):
+        script_files = glob.glob(os.path.join(scripts_path, "*.py"))
+        for script_file in script_files:
+            script_name = os.path.basename(script_file[:-3])  # Remove '.py' extension
+            if script_name == "__init__":
+                continue  # Skip __init__.py files
+            self.addTabFromScript(script_name)
 
-        with open(config_path, 'r') as config_file:
-            tab_config = json.load(config_file)
-        
-        for tab_info in tab_config:
-            self.addTabFromInfo(tab_info)
-    
-    def addTabFromInfo(self, tab_info):
+    def addTabFromScript(self, script_name):
         try:
-            script_module = __import__(f"scripts.{tab_info['script']}", fromlist=[''])
-            
+            spec = importlib.util.spec_from_file_location(script_name, os.path.join(scripts_path, f"{script_name}.py"))
+            script_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(script_module)
+
             tab_content = script_module.get_tab_widget()
-            
-            icon_path = tab_info.get('icon', '')
-            tab_text = tab_info.get('name', 'Unnamed Tab')
-            
+
+            # Attempt to load an icon for the tab from the 'icons' folder
+            icon_filename = getattr(script_module, 'TAB_ICON', f"{script_name}.png")  # Default to script_name.png if not specified
+            icon_path = os.path.join(application_path, 'icons', icon_filename)
+
             if os.path.exists(icon_path):
                 icon = QIcon(icon_path)
-                tab_index = self.tab_widget.addTab(tab_content, icon, "") 
+                tab_index = self.tab_widget.addTab(tab_content, icon, "")
             else:
-                icon = QIcon()
-                tab_index = self.tab_widget.addTab(tab_content, icon, tab_text)
-            
-            self.tab_widget.setTabToolTip(tab_index, tab_text)
-        
-        except ImportError as e:
-            error_message = (f"Failed to import script module '{tab_info['script']}': {e}.\n\n"
-                            "Possible reasons and fixes:\n"
-                            "- The script file is missing in the 'scripts' folder.\n"
-                            "- There's a typo in the script name in your configuration file.\n"
-                            "- The script does not have an '__init__.py' file in its directory (if it's a package).\n"
-                            "\nPlease ensure the script exists, is correctly named, and is in the right location.")
-            QMessageBox.critical(self, "Import Error", error_message)
-        except AttributeError as e:
-            error_message = (f"Script module '{tab_info['script']}' does not have a 'get_tab_widget' function: {e}.\n\n"
-                            "To fix this issue:\n"
-                            "- Ensure the script defines a 'get_tab_widget' function that returns a QWidget instance.\n"
-                            "- Check for typos in the function name.\n"
-                            "- Ensure the function is properly defined at the top level of the module.")
-            QMessageBox.critical(self, "Attribute Error", error_message)
+                # If no icon is found, use a default icon or no icon
+                tab_index = self.tab_widget.addTab(tab_content, QIcon(), script_name)  # Use script_name as fallback tab text
 
+            self.tab_widget.setTabToolTip(tab_index, script_name)  # Use script_name as fallback tooltip
+
+        except Exception as e:
+            print(f"Error loading script {script_name}: {e}")
+            # Handle errors or log them as needed
 
 
 if __name__ == "__main__":
