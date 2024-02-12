@@ -2,6 +2,7 @@ from PySide2.QtCore import QThread, Qt, QUrl, Signal
 from PySide2.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QProgressBar, QTextBrowser, QHBoxLayout, QFileDialog, QApplication
 from PySide2.QtGui import QDesktopServices
 import os, re, sys
+
 class URLExtractionThread(QThread):
     url_found = Signal(str)
     progress_updated = Signal(int)
@@ -12,8 +13,7 @@ class URLExtractionThread(QThread):
         self.stop_flag = False
 
     def run(self):
-        self.stop_flag = False
-        total_files = sum([len(files) for _, _, files in os.walk(self.folder_path)])
+        total_files = sum(1 for _, _, files in os.walk(self.folder_path) if any(file.endswith('.txt') for file in files))
         processed_files = 0
 
         for root, dirs, files in os.walk(self.folder_path):
@@ -26,14 +26,22 @@ class URLExtractionThread(QThread):
                     file_path = os.path.join(root, filename)
                     folder_url = f'file:///{root}'.replace('\\', '/')
                     content = self.read_file_with_fallback_encodings(file_path)
-                    if content is not None:
-                        urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', content)
+                    if content:
+                        urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', content)
+                        urls = self.separate_adjacent_urls(urls)
                         if urls:
                             formatted_entry = f'<a href="{folder_url}" style="color: #c77100;">From {filename} in [{root}]</a>:<br>' + '<br>'.join([f'<a href="{url}">{url}</a>' for url in urls]) + '<br><br>'
                             self.url_found.emit(formatted_entry)
                 processed_files += 1
                 progress = int((processed_files / total_files) * 100)
                 self.progress_updated.emit(progress)
+
+    def separate_adjacent_urls(self, urls):
+        separated_urls = []
+        for url in urls:
+            adjacent_urls = re.split(r'(?=http[s]?://)', url)
+            separated_urls.extend(adjacent_urls)
+        return separated_urls
 
     def read_file_with_fallback_encodings(self, file_path):
         encodings = ['utf-8', 'iso-8859-1', 'windows-1252']
@@ -61,21 +69,13 @@ class URLExtractorApp(QMainWindow):
         self.titleLabel = QLabel('URL Extractor')
         self.titleLabel.setAlignment(Qt.AlignCenter)
 
-        self.btnSelect = QPushButton('Select')
-        self.btnExport = QPushButton('Export')
-        self.btnClear = QPushButton('Clear')
-        self.btnStop = QPushButton('Stop')
+        self.btnSelect = QPushButton('Select Folder')
+        self.btnExport = QPushButton('Export Links')
+        self.btnClear = QPushButton('Clear Output')
+        self.btnStop = QPushButton('Stop Extraction')
 
         self.progressBar = QProgressBar()
         self.progressBar.setTextVisible(False)
-
-        self.progressBar.setStyleSheet("""
-            QProgressBar {
-                border: 2px solid grey;
-                border-radius: 5px;
-                text-align: center;
-            }
-            """)
 
         self.textBrowser = QTextBrowser()
         self.textBrowser.setPlaceholderText("Extracted URLs will be displayed here.")

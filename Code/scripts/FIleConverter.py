@@ -1,6 +1,6 @@
 # Insert this code where you need to select input and output file paths using buttons
 
-from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QFileDialog, QLabel
+from PySide2.QtWidgets import QWidget, QPushButton, QVBoxLayout, QFileDialog, QLabel
 
 class FileConverter(QWidget):
     def __init__(self):

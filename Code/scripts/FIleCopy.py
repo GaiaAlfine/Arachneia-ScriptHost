@@ -1,166 +1,212 @@
-import sys
-from PySide2.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog,
-    QProgressBar, QLabel, QMessageBox, QCheckBox, QScrollArea, QGridLayout, QCheckBox
-)
-from PySide2.QtCore import QThread, Signal, Qt
-import os
+from PySide2.QtWidgets import (QWidget, QVBoxLayout, QLabel, QPushButton, QProgressBar,
+                               QHBoxLayout, QFileDialog, QScrollArea, QWidget, QGridLayout,
+                               QButtonGroup, QCheckBox)
+from PySide2.QtCore import QObject, Signal, Qt, QThread
+import os, sys
 import shutil
-class CopyWorker(QThread):
-    update_progress = Signal(int)
-    finished = Signal(bool)
 
-    def __init__(self, source_folder, output_folder, file_types, options):
+class CopyWorker(QObject):
+    update_progress = Signal(int)
+    finished = Signal(bool)  # True if completed, False if stopped
+
+    def __init__(self, source_folder, output_folder, file_type_buttons, options):
         super().__init__()
         self.source_folder = source_folder
         self.output_folder = output_folder
-        self.file_types = file_types
+        self.file_type_buttons = file_type_buttons
         self.options = options
-
-    def run(self):
-        total_files_to_copy, total_dirs_to_copy = self.calculate_total_files_and_dirs()
-        total_items_to_copy = total_files_to_copy + (total_dirs_to_copy if not self.options.get('skip_empty_folders', True) else 0)
-        copied_items = 0
-
-        for root, dirs, files in os.walk(self.source_folder, topdown=False):
-            # Handle directory creation for prefix_and_flatten option or non-empty dirs/files
-            dst_dir = os.path.join(self.output_folder, os.path.relpath(root, self.source_folder))
-            if self.options.get('prefix_and_flatten', False) or files or not self.options.get('skip_empty_folders', True):
-                if not os.path.exists(dst_dir):
-                    os.makedirs(dst_dir, exist_ok=True)
-                    if not self.options.get('skip_empty_folders', True):
-                        copied_items += 1  # Count directory creation towards progress
-                        self.update_progress.emit(int((copied_items / total_items_to_copy) * 100))
-
-            for file in files:
-                if not self.file_types or any(file.endswith(ext) for ext in self.file_types):
-                    if self.options.get('prefix_and_flatten', False):
-                        relative_path = os.path.relpath(root, self.source_folder)
-                        new_filename = f"{relative_path.replace(os.sep, '_')}_{file}" if relative_path != '.' else file
-                        dst_file = os.path.join(self.output_folder, new_filename)
-                    else:
-                        dst_file = os.path.join(dst_dir, file)
-                    shutil.copy2(os.path.join(root, file), dst_file)
-                    copied_items += 1
-                    self.update_progress.emit(int((copied_items / total_items_to_copy) * 100))
-
-        self.finished.emit(True)
-
-    def calculate_total_files_and_dirs(self):
-        total_files = 0
-        total_dirs = 0
-        for root, dirs, files in os.walk(self.source_folder):
-            if not self.options.get('skip_empty_folders', True):
-                total_dirs += 1  # Count each directory
-            total_files += sum(1 for file in files if not self.file_types or any(file.endswith(ext) for ext in self.file_types))
-        return total_files, total_dirs
-
+        self.keep_copying = True
 
     def stop(self):
-        self.requestInterruption()
-        self.wait()
+        self.keep_copying = False
+
+    def copy_files(self):
+        total_files_to_copy = self.calculate_total_files()
+        copied_files = 0
+        self.update_progress.emit(0)
+
+        for root, dirs, files in os.walk(self.source_folder, topdown=False):
+            if not self.keep_copying:
+                self.finished.emit(False)  # Stopped
+                return
+
+            files_to_copy = [f for f in files if any(f.endswith(ext) for ext, btn in self.file_type_buttons.items() if btn.isChecked())]
+
+            # Handle prefix_and_flatten option
+            if self.options['prefix_and_flatten']:
+                for file in files_to_copy:
+                    subfolder_name = '' if root == self.source_folder else os.path.basename(root)
+                    new_filename = f"{subfolder_name}_{file}" if subfolder_name else file
+                    dst_file = os.path.join(self.output_folder, new_filename)
+                    src_file = os.path.join(root, file)
+                    shutil.copy2(src_file, dst_file)
+                    copied_files += 1
+                    self.update_progress.emit(int((copied_files / total_files_to_copy) * 100))
+                continue  # Skip the regular copying process for this iteration
+
+            # Regular copying process for non-prefix_and_flatten option
+            if not self.options['skip_empty_folders'] or files_to_copy:
+                dst_dir = root.replace(self.source_folder, self.output_folder, 1)
+                os.makedirs(dst_dir, exist_ok=True)
+                for file in files_to_copy:
+                    dst_file = os.path.join(dst_dir, file)
+                    src_file = os.path.join(root, file)
+                    shutil.copy2(src_file, dst_file)
+                    copied_files += 1
+                    self.update_progress.emit(int((copied_files / total_files_to_copy) * 100))
+
+        self.finished.emit(True)  # Completed
 
 
-def get_tab_widget():
-    widget = QWidget()
-    layout = QVBoxLayout(widget)
+    def calculate_total_files(self):
+        total = 0
+        for root, _, files in os.walk(self.source_folder):
+            for file in files:
+                if any(file.endswith(ext) for ext, btn in self.file_type_buttons.items() if btn.isChecked()):
+                    total += 1
+        return total
 
-    source_folder = ''
-    output_folder = ''
-    worker = None  # Define worker here to make it accessible
+class FileCopyProgram(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.file_type_buttons = {}
+        self.setWindowTitle("File Copy Program")
+        
+        # Main layout
+        self.layout = QVBoxLayout(self)
+        
+        # Setup UI
+        self.setup_ui()
 
-    select_source_folder_btn = QPushButton("Select Source Folder")
-    select_output_folder_btn = QPushButton("Select Output Folder")
-    progressBar = QProgressBar()
-    start_btn = QPushButton("Start")
-    stop_btn = QPushButton("Stop")
-    status_label = QLabel("Status: Idle")
-    skip_empty_folders_cb = QCheckBox("Skip Empty Folders")
-    prefix_and_flatten_cb = QCheckBox("Prefix and Flatten")
+        self.source_folder = None
+        self.output_folder = None
 
-    scrollArea = QScrollArea()
-    scrollAreaWidgetContents = QWidget()
-    scrollArea.setWidget(scrollAreaWidgetContents)
-    scrollArea.setWidgetResizable(True)
-    file_types_layout = QGridLayout(scrollAreaWidgetContents)
+    def setup_ui(self):
+        self.placeholder_label = QLabel("File Copy")
+        self.placeholder_label.setAlignment(Qt.AlignCenter)
+        self.placeholder_label.setStyleSheet("text-decoration: underline;")
+        self.layout.addWidget(self.placeholder_label)
 
-    def update_file_types():
-        nonlocal source_folder
-        if os.path.exists(source_folder):
-            for i in reversed(range(file_types_layout.count())): 
-                widget_to_remove = file_types_layout.itemAt(i).widget()
-                if widget_to_remove is not None:  # Ensure the widget is not None before removing
-                    widget_to_remove.setParent(None)
-                    widget_to_remove.deleteLater()
-            file_types = set()
-            for root, dirs, files in os.walk(source_folder):
-                for file in files:
-                    ext = os.path.splitext(file)[1].lower()
-                    if ext:
-                        file_types.add(ext)
-            for ext in sorted(file_types):
-                cb = QCheckBox(ext)
-                file_types_layout.addWidget(cb)
+        # Input and Output buttons with Progress Bar
+        self.io_layout = QHBoxLayout()
+        self.select_source_folder_btn = QPushButton("Select Source Folder")
+        self.select_source_folder_btn.clicked.connect(self.select_source_folder)
+        self.io_layout.addWidget(self.select_source_folder_btn)
+        
+        self.progressBar = QProgressBar()
+        self.progressBar.setTextVisible(False)
+        self.io_layout.addWidget(self.progressBar)
+        
+        self.select_output_folder_btn = QPushButton("Select Output Folder")
+        self.select_output_folder_btn.clicked.connect(self.select_output_folder)
+        self.io_layout.addWidget(self.select_output_folder_btn)
+        self.layout.addLayout(self.io_layout)
 
-    def select_source_folder():
-        nonlocal source_folder
-        temp = QFileDialog.getExistingDirectory(widget, "Select Source Folder")
-        if temp:  # Check if the user made a selection
-            source_folder = temp
-            status_label.setText(f"Source folder selected: {source_folder}")
-            update_file_types()
+        # Toggle buttons
+        self.settings_layout = QHBoxLayout()
 
-    def select_output_folder():
-        nonlocal output_folder
-        temp = QFileDialog.getExistingDirectory(widget, "Select Output Folder")
-        if temp:  # Check if the user made a selection
-            output_folder = temp
-            status_label.setText(f"Output folder selected: {output_folder}")
+        self.option_group = QButtonGroup(self)
+        self.option_group.setExclusive(True)
 
-    def start_copying():
-        nonlocal worker
-        selected_file_types = [cb.text() for cb in scrollAreaWidgetContents.findChildren(QCheckBox) if cb.isChecked()]
-        if not source_folder or not output_folder:
-            QMessageBox.warning(widget, "Warning", "Please select both source and output folders.")
-            return
+        self.add_option_button("None", -1)
+        self.add_option_button("Skip Empty Folders", 0)
+        self.add_option_button("Prefix and Flatten", 1)
+        self.layout.addLayout(self.settings_layout)
+
+        # Status label
+        self.status_label = QLabel("")
+        self.layout.addWidget(self.status_label)
+
+        # Scroll Area for file type buttons
+        self.scrollArea = QScrollArea()
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.scrollArea.setWidgetResizable(True)
+        self.checkbox_container_layout = QGridLayout(self.scrollAreaWidgetContents)
+        self.layout.addWidget(self.scrollArea)
+
+        # Start and Stop buttons
+        self.button_layout = QHBoxLayout()
+        self.start_btn = QPushButton("Start")
+        self.start_btn.clicked.connect(self.start_copying)
+        self.button_layout.addWidget(self.start_btn)
+
+        self.stop_btn = QPushButton("Stop")
+        self.stop_btn.clicked.connect(self.stop_copying)
+        self.stop_btn.setEnabled(False)
+        self.button_layout.addWidget(self.stop_btn)
+
+        self.layout.addLayout(self.button_layout)
+
+    def add_option_button(self, name, id):
+        toggle_button = QPushButton(name)
+        toggle_button.setCheckable(True)
+        self.settings_layout.addWidget(toggle_button)
+        self.option_group.addButton(toggle_button, id)
+
+    def select_source_folder(self):
+        self.source_folder = QFileDialog.getExistingDirectory(self, "Select Source Folder")
+        if self.source_folder:
+            self.update_file_type_toggle_buttons()
+
+    def select_output_folder(self):
+        self.output_folder = QFileDialog.getExistingDirectory(self, "Select Output Folder")
+
+    def update_file_type_toggle_buttons(self):
+        for i in reversed(range(self.checkbox_container_layout.count())): 
+            widget = self.checkbox_container_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.file_type_buttons.clear()
+
+        file_types = set()
+        for root, dirs, files in os.walk(self.source_folder):
+            for file in files:
+                ext = os.path.splitext(file)[1].lower()
+                if ext:
+                    file_types.add(ext)
+
+        row, col = 0, 0
+        for file_type in sorted(file_types):
+            toggle_button = QPushButton(file_type)
+            toggle_button.setCheckable(True)
+            self.checkbox_container_layout.addWidget(toggle_button, row, col)
+            self.file_type_buttons[file_type] = toggle_button
+            col += 1
+            if col >= 4:
+                row += 1
+                col = 0
+
+    def start_copying(self):
+        self.thread = QThread()
         options = {
-            'skip_empty_folders': skip_empty_folders_cb.isChecked(),
-            'prefix_and_flatten': prefix_and_flatten_cb.isChecked(),
+            "skip_empty_folders": self.option_group.button(0).isChecked(),
+            "prefix_and_flatten": self.option_group.button(1).isChecked()
         }
-        worker = CopyWorker(source_folder, output_folder, selected_file_types, options)
-        worker.update_progress.connect(progressBar.setValue)
-        worker.finished.connect(lambda: status_label.setText("Copy finished."))
-        worker.start()
-        start_btn.setEnabled(False)
-        stop_btn.setEnabled(True)
+        self.worker = CopyWorker(self.source_folder, self.output_folder, self.file_type_buttons, options)
+        self.worker.moveToThread(self.thread)
 
-    def stop_copying():
-        nonlocal worker
-        if worker is not None:
-            worker.stop()
-            start_btn.setEnabled(True)
-            stop_btn.setEnabled(False)
+        self.thread.started.connect(self.worker.copy_files)
+        self.worker.update_progress.connect(self.progressBar.setValue)
+        self.worker.finished.connect(self.on_copy_finished)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.stop_btn.clicked.connect(self.worker.stop)
+        self.stop_btn.setEnabled(True)
+        self.start_btn.setEnabled(False)
 
-    select_source_folder_btn.clicked.connect(select_source_folder)
-    select_output_folder_btn.clicked.connect(select_output_folder)
-    start_btn.clicked.connect(start_copying)
-    stop_btn.clicked.connect(stop_copying)
-    stop_btn.setEnabled(False)
+        self.thread.start()
 
-    layout.addWidget(select_source_folder_btn)
-    layout.addWidget(select_output_folder_btn)
-    layout.addWidget(progressBar)
-    layout.addWidget(skip_empty_folders_cb)
-    layout.addWidget(prefix_and_flatten_cb)
-    layout.addWidget(scrollArea)
-    layout.addWidget(start_btn)
-    layout.addWidget(stop_btn)
-    layout.addWidget(status_label)
+    def stop_copying(self):
+        if self.worker:
+            self.worker.stop()
+            self.stop_btn.setEnabled(False)
 
+    def on_copy_finished(self, completed):
+        self.status_label.setText("Copying Completed" if completed else "Copying Stopped")
+        self.start_btn.setEnabled(True)
+        self.stop_btn.setEnabled(False)
+def get_tab_widget():
+    widget = FileCopyProgram()
     return widget
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    mainWidget = get_tab_widget()
-    mainWidget.show()
-    sys.exit(app.exec_())

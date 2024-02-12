@@ -2,16 +2,13 @@ import sys
 import os
 import importlib.util
 import glob
-from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QMessageBox
+from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory
 from PySide2.QtGui import QPalette, QColor, QIcon
 from PySide2.QtCore import QSize
 
 
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" Arachneia.pyw
-
-#this also works but when i insert a markdown script the program crahes. 
-#pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" --hidden-import=markdown Arachneia.pyw
 
 # Configuration paths and application version
 if getattr(sys, 'frozen', False):
