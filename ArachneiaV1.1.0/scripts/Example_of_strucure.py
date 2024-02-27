@@ -1,11 +1,11 @@
-# Import the required modules from PySide2
-from PySide2.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
+# Import the required modules from PyQt5
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
 # Define the main window class
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("PySide2 GUI Example")
+        self.setWindowTitle("PyQt5 GUI Example")
 
         # Create a central widget and set it to the main window
         self.centralWidget = QWidget()

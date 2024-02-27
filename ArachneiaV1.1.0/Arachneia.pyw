@@ -1,17 +1,10 @@
-import sys
-import os
-import importlib.util
-import glob
-from PySide2.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QMessageBox
-from PySide2.QtGui import QPalette, QColor, QIcon
-from PySide2.QtCore import QSize
-
+import sys, os
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QFileDialog, QWidget, QAction, QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QListWidget
+from PyQt5.QtGui import QPalette, QColor, QIcon
+from PyQt5.QtCore import QSize
 
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" Arachneia.pyw
-
-#this also works but when i insert a markdown script the program crahes. 
-#pyinstaller --onefile --noconsole --windowed --icon=icons/Arachneia.ico --add-data "scripts;scripts" --hidden-import=markdown Arachneia.pyw
 
 # Configuration paths and application version
 if getattr(sys, 'frozen', False):
@@ -22,31 +15,104 @@ else:
 icon_path = os.path.join(application_path, 'icons', 'Arachneia.ico')
 scripts_path = os.path.join(application_path, 'scripts')
 
-
-Ver = "V1.1.0" # This is the version number for this application.
+Ver = "V1.5.0"  # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
 
 def dark_palette():
     palette = QPalette()
-    palette.setColor(QPalette.Window, QColor(35, 35, 35))
+    palette.setColor(QPalette.Window, QColor(53, 53, 53))
     palette.setColor(QPalette.WindowText, QColor(220, 220, 220))
-    palette.setColor(QPalette.Base, QColor(18, 18, 18))
-    palette.setColor(QPalette.AlternateBase, QColor(50, 50, 50))
+    palette.setColor(QPalette.Base, QColor(35, 35, 35))
+    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
     palette.setColor(QPalette.ToolTipBase, QColor(25, 25, 25))
     palette.setColor(QPalette.ToolTipText, QColor(220, 220, 220))
     palette.setColor(QPalette.Text, QColor(220, 220, 220))
-    palette.setColor(QPalette.Button, QColor(50, 50, 50))
+    palette.setColor(QPalette.Button, QColor(53, 53, 53))
     palette.setColor(QPalette.ButtonText, QColor(220, 220, 220))
-    palette.setColor(QPalette.BrightText, QColor(220, 220, 220))
+    palette.setColor(QPalette.BrightText, QColor(255, 255, 255))
     palette.setColor(QPalette.Link, QColor(42, 130, 218))
     palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
     palette.setColor(QPalette.HighlightedText, QColor(0, 0, 0))
     palette.setColor(QPalette.Disabled, QPalette.Text, QColor(128, 128, 128))
-    palette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(128, 128, 128))
+    palette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(105, 105, 105))
     palette.setColor(QPalette.Disabled, QPalette.WindowText, QColor(128, 128, 128))
     return palette
+
+def convert_pyside2_to_pyqt5(script_path):
+    with open(script_path, 'r') as file:
+        script_code = file.read()
+    
+    # Basic replacements for common components and patterns
+    replacements = {
+        'from PySide2.QtCore import Signal': 'from PyQt5.QtCore import pyqtSignal',
+        'from PySide2.QtCore import Slot': 'from PyQt5.QtCore import pyqtSlot',
+        'from PySide2.QtWidgets': 'from PyQt5.QtWidgets',
+        'from PySide2.QtGui': 'from PyQt5.QtGui',
+        'from PySide2.QtCore': 'from PyQt5.QtCore',
+        'PySide2.': 'PyQt5.'
+    }
+    
+    # Apply replacements
+    for old, new in replacements.items():
+        script_code = script_code.replace(old, new)
+    
+    # Handle Signal and Slot if not explicitly imported
+    script_code = script_code.replace('Signal', 'pyqtSignal')
+    script_code = script_code.replace('Slot', 'pyqtSlot')
+    
+    # Additional specific replacements can be added here as needed
+    # This could include handling specific method name differences or property changes
+    
+    return script_code
+
+class SettingsWindow(QDialog):
+    def __init__(self, mainWindow, scripts):
+        super().__init__(mainWindow)
+        self.mainWindow = mainWindow
+        self.setWindowTitle('Settings')
+        self.setGeometry(100, 100, 400, 300)
+
+        layout = QVBoxLayout()
+        self.scriptListWidget = QListWidget()
+        layout.addWidget(QLabel('Scripts:'))
+        layout.addWidget(self.scriptListWidget)
+
+        for script in scripts:
+            self.scriptListWidget.addItem(script)
+
+        # Buttons for adding and removing scripts
+        buttonsLayout = QHBoxLayout()
+        self.addButton = QPushButton('Add')
+        self.removeButton = QPushButton('Remove')
+        buttonsLayout.addWidget(self.addButton)
+        buttonsLayout.addWidget(self.removeButton)
+        layout.addLayout(buttonsLayout)
+
+        self.addButton.clicked.connect(self.addScript)
+        self.removeButton.clicked.connect(self.removeSelectedScript)
+
+        closeButton = QPushButton('Close')
+        closeButton.clicked.connect(self.close)
+        layout.addWidget(closeButton)
+
+        self.setLayout(layout)
+
+    def addScript(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Open Script", "", "Python Scripts (*.py)")
+        if filename:
+            self.scriptListWidget.addItem(filename)
+            self.mainWindow.addScript(filename)
+
+    def removeSelectedScript(self):
+        listItems = self.scriptListWidget.selectedItems()
+        if not listItems: return
+        for item in listItems:
+            self.scriptListWidget.takeItem(self.scriptListWidget.row(item))
+            self.mainWindow.removeScript(item.text())
+
+
 
 
 class RotatedTabBar(QTabBar):
@@ -64,47 +130,111 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(icon_path))
         self.resize(1000, 600)
         
+        self.tabWidget = QTabWidget(self)
+        self.setCentralWidget(self.tabWidget)
+
+        # Options bar setup
+        self.menuBar = self.menuBar()
+        self.fileMenu = self.menuBar.addMenu('&File')
+        self.settingsMenu = self.menuBar.addMenu('&Settings')
+        self.helpMenu = self.menuBar.addMenu('&Help')
+
+        # Example actions
+        self.exitAction = QAction('&Exit', self)
+        self.exitAction.triggered.connect(self.close)
+        self.fileMenu.addAction(self.exitAction)
+
+        # Settings action
+        self.settingsAction = QAction('&Add and Remove Scripts', self)
+        self.settingsAction.triggered.connect(self.openSettings)
+        self.settingsMenu.addAction(self.settingsAction)
+
+        # About action (placeholder)
+        self.aboutAction = QAction('&About', self)
+        # Connect this action to the appropriate method for showing about information
+        self.helpMenu.addAction(self.aboutAction)
+        
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabBar(RotatedTabBar())
         self.tab_widget.setTabPosition(QTabWidget.West)
         
-        self.loadScriptsAsTabs()
-        
         self.setCentralWidget(self.tab_widget)
+        self.tab_widget.addTab(QWidget(), "+")
+        self.tab_widget.tabBarClicked.connect(self.tabClicked)
 
-    def loadScriptsAsTabs(self):
-        script_files = glob.glob(os.path.join(scripts_path, "*.py"))
-        for script_file in script_files:
-            script_name = os.path.basename(script_file[:-3])  # Remove '.py' extension
-            if script_name == "__init__":
-                continue  # Skip __init__.py files
-            self.addTabFromScript(script_name)
+        self.scripts = []  # Initialize an empty list to store scripts
 
-    def addTabFromScript(self, script_name):
+    def openSettings(self):
+        self.settingsWindow = SettingsWindow(self, self.scripts)
+        self.settingsWindow.show()
+
+    # Your existing methods...
+
+
+    def tabClicked(self, index):
+        if self.tab_widget.tabText(index) == "+":
+            filename, _ = QFileDialog.getOpenFileName(self, "Open Script", "", "Python Scripts (*.py)")
+            if filename:
+                self.addTabFromScript(filename)
+
+    def addTabFromScript(self, filename):
+        script_name = os.path.basename(filename)[:-3]
         try:
-            spec = importlib.util.spec_from_file_location(script_name, os.path.join(scripts_path, f"{script_name}.py"))
-            script_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(script_module)
-
-            tab_content = script_module.get_tab_widget()
-
-            # Attempt to load an icon for the tab from the 'icons' folder
-            icon_filename = getattr(script_module, 'TAB_ICON', f"{script_name}.png")  # Default to script_name.png if not specified
-            icon_path = os.path.join(application_path, 'icons', icon_filename)
-
-            if os.path.exists(icon_path):
-                icon = QIcon(icon_path)
-                tab_index = self.tab_widget.addTab(tab_content, icon, "")
+            # Convert PySide2 script to PyQt5 dynamically
+            script_code = convert_pyside2_to_pyqt5(filename)
+            
+            # Custom image loader with fallback
+            def custom_image_loader(image_path, default_text):
+                if os.path.exists(image_path):
+                    return QIcon(image_path)  # or however you load images
+                else:
+                    # Fallback: return a placeholder or text
+                    print(f"Image not found: {image_path}, using default text.")
+                    return default_text
+            
+            # Prepare the execution environment with the custom image loader
+            exec_globals = {
+                'custom_image_loader': custom_image_loader,
+            }
+            exec(script_code, exec_globals)
+            
+            # Now, use the globals dictionary to access the script's content
+            if 'get_tab_widget' in exec_globals:
+                tab_content = exec_globals['get_tab_widget']()
             else:
-                # If no icon is found, use a default icon or no icon
-                tab_index = self.tab_widget.addTab(tab_content, QIcon(), script_name)  # Use script_name as fallback tab text
-
-            self.tab_widget.setTabToolTip(tab_index, script_name)  # Use script_name as fallback tooltip
-
+                tab_content = QWidget()
+                
+            tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, script_name)
+            self.tab_widget.setCurrentIndex(tab_index)
         except Exception as e:
             print(f"Error loading script {script_name}: {e}")
-            # Handle errors or log them as needed
+        if filename not in self.scripts:
+            self.scripts.append(filename)
+            self.addTabFromScript(filename)
 
+    def addScript(self, filename):
+        """Adds a script to the application and opens a tab for it."""
+        if filename not in self.scripts:
+            self.scripts.append(filename)
+            self.addTabFromScript(filename)  # Ensure this method correctly adds a tab for the script
+
+    # Assuming the issue might be with reinitialization or improper access, ensure that your QTabWidget is always valid
+    def removeScript(self, filename):
+        if not hasattr(self, 'tabWidget') or self.tabWidget is None:
+            print("TabWidget reference is invalid or deleted.")
+            return
+
+        if filename in self.scripts:
+            self.scripts.remove(filename)
+            for i in range(self.tabWidget.count()):
+                if self.tabWidget.tabText(i) == filename:
+                    self.tabWidget.removeTab(i)
+                    break
+
+    def openSettings(self):
+        """Opens the settings window, passing in the current scripts and a reference to self."""
+        self.settingsWindow = SettingsWindow(self, self.scripts)
+        self.settingsWindow.show()
 
 if __name__ == "__main__":
     QApplication.setStyle(QStyleFactory.create('Fusion'))
