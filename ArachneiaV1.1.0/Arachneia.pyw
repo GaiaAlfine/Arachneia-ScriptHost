@@ -111,10 +111,7 @@ class SettingsWindow(QDialog):
         for item in listItems:
             self.scriptListWidget.takeItem(self.scriptListWidget.row(item))
             self.mainWindow.removeScript(item.text())
-
-
-
-
+            
 class RotatedTabBar(QTabBar):
     def tabSizeHint(self, index):
         return QSize(100, 100)
@@ -154,22 +151,33 @@ class MainWindow(QMainWindow):
         # Connect this action to the appropriate method for showing about information
         self.helpMenu.addAction(self.aboutAction)
         
-        self.tab_widget = QTabWidget()
+        self.tab_widget = QTabWidget(self)
+        self.setCentralWidget(self.tab_widget)
+
         self.tab_widget.setTabBar(RotatedTabBar())
         self.tab_widget.setTabPosition(QTabWidget.West)
-        
-        self.setCentralWidget(self.tab_widget)
+
+        # Call the method to add the Home tab
+        self.addHomeTab()
+
         self.tab_widget.addTab(QWidget(), "+")
         self.tab_widget.tabBarClicked.connect(self.tabClicked)
 
-        self.scripts = []  # Initialize an empty list to store scripts
+        self.scripts = []  # For storing script paths
 
-    def openSettings(self):
-        self.settingsWindow = SettingsWindow(self, self.scripts)
-        self.settingsWindow.show()
+    # Method to add the Home tab
+    def addHomeTab(self):
+        homeTabContent = QWidget()  # Create the widget for the tab content
+        homeLayout = QVBoxLayout(homeTabContent)  # Set a layout for this widget
 
-    # Your existing methods...
+        # Add content to the home tab here, for example, a welcome label
+        welcomeLabel = QLabel("Welcome to Arachneia!")
+        homeLayout.addWidget(welcomeLabel)
 
+        # Add more widgets to homeLayout as needed
+
+        # Add the tab to the tab widget
+        self.tab_widget.insertTab(0, homeTabContent, "Home")
 
     def tabClicked(self, index):
         if self.tab_widget.tabText(index) == "+":
@@ -180,37 +188,38 @@ class MainWindow(QMainWindow):
     def addTabFromScript(self, filename):
         script_name = os.path.basename(filename)[:-3]
         try:
-            # Convert PySide2 script to PyQt5 dynamically
-            script_code = convert_pyside2_to_pyqt5(filename)
-            
-            # Custom image loader with fallback
-            def custom_image_loader(image_path, default_text):
-                if os.path.exists(image_path):
-                    return QIcon(image_path)  # or however you load images
-                else:
-                    # Fallback: return a placeholder or text
-                    print(f"Image not found: {image_path}, using default text.")
-                    return default_text
-            
-            # Prepare the execution environment with the custom image loader
-            exec_globals = {
-                'custom_image_loader': custom_image_loader,
-            }
-            exec(script_code, exec_globals)
-            
-            # Now, use the globals dictionary to access the script's content
-            if 'get_tab_widget' in exec_globals:
-                tab_content = exec_globals['get_tab_widget']()
-            else:
-                tab_content = QWidget()
+            if filename not in self.scripts:  # Check if the script is not already added
+                # Convert PySide2 script to PyQt5 dynamically
+                script_code = convert_pyside2_to_pyqt5(filename)
                 
-            tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, script_name)
-            self.tab_widget.setCurrentIndex(tab_index)
+                # Custom image loader with fallback
+                def custom_image_loader(image_path, default_text):
+                    if os.path.exists(image_path):
+                        return QIcon(image_path)  # or however you load images
+                    else:
+                        # Fallback: return a placeholder or text
+                        print(f"Image not found: {image_path}, using default text.")
+                        return default_text
+                
+                # Prepare the execution environment with the custom image loader
+                exec_globals = {
+                    'custom_image_loader': custom_image_loader,
+                }
+                exec(script_code, exec_globals)
+                
+                # Now, use the globals dictionary to access the script's content
+                if 'get_tab_widget' in exec_globals:
+                    tab_content = exec_globals['get_tab_widget']()
+                else:
+                    tab_content = QWidget()
+                    
+                tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, script_name)
+                self.tab_widget.setCurrentIndex(tab_index)
+                
+                self.scripts.append(filename)  # Add the script to the list
         except Exception as e:
             print(f"Error loading script {script_name}: {e}")
-        if filename not in self.scripts:
-            self.scripts.append(filename)
-            self.addTabFromScript(filename)
+
 
     def addScript(self, filename):
         """Adds a script to the application and opens a tab for it."""
@@ -220,16 +229,13 @@ class MainWindow(QMainWindow):
 
     # Assuming the issue might be with reinitialization or improper access, ensure that your QTabWidget is always valid
     def removeScript(self, filename):
-        if not hasattr(self, 'tabWidget') or self.tabWidget is None:
-            print("TabWidget reference is invalid or deleted.")
-            return
-
         if filename in self.scripts:
             self.scripts.remove(filename)
-            for i in range(self.tabWidget.count()):
-                if self.tabWidget.tabText(i) == filename:
-                    self.tabWidget.removeTab(i)
+            for i in range(self.tab_widget.count() - 1, -1, -1):  # Note: Adjusted to iterate correctly
+                if self.tab_widget.tabText(i) == os.path.basename(filename)[:-3]:  # Assuming script_name is used as tabText
+                    self.tab_widget.removeTab(i)
                     break
+
 
     def openSettings(self):
         """Opens the settings window, passing in the current scripts and a reference to self."""
