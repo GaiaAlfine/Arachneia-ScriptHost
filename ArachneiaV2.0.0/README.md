@@ -12,13 +12,11 @@ Arachneia is a versatile application designed to leverage the power of PyQt5 for
 - Integrated settings for script management
 - Version 2.0.0
 
+## Scripts
+
+[install Scripts here.](https://github.com/GaiaAlfine/Arachneia-Scripts)
+
 ## Installation
-
-### Requirements
-
-- Python 3.x
-- PyQt5
-- PyInstaller (for creating an executable)
 
 ### Creating an Executable
 
