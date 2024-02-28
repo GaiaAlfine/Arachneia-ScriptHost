@@ -44,7 +44,7 @@ Arachneia includes a utility function `convert_pyside2_to_pyqt5` that converts P
 
 ### Settings Window
 
-The Settings window allows users to manage their scripts, including adding new scripts or removing existing ones from the application.
+The Settings window allows users to manage their scripts, including removing existing scripts from the application.
 
 ## Development
 
@@ -55,20 +55,6 @@ Developers can customize Arachneia by modifying its source code. This includes a
 ### Dark Palette
 
 A dark palette is implemented to provide a comfortable UI experience, especially beneficial for prolonged use.
-
-## Components
-
-### `MainWindow`
-
-Serves as the primary window of the application, hosting the tab widget and menu bar.
-
-### `SettingsWindow`
-
-A dialog for managing scripts, accessible through the Settings menu.
-
-### `RotatedTabBar`
-
-A custom tab bar with rotated labels for a unique UI presentation.
 
 ## Conclusion
 
