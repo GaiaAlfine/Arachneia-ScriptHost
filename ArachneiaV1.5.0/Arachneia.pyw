@@ -1,4 +1,4 @@
-import sys, os, subprocess, pkg_resources
+import sys, os, subprocess, pkg_resources, shutil, importlib.util, glob
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QFileDialog, QWidget, QAction, QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QListWidget, QMessageBox
 from PyQt5.QtGui import QPalette, QColor, QIcon
 from PyQt5.QtCore import QSize
@@ -14,7 +14,7 @@ else:
 
 icon_path = os.path.join(application_path,'_internal', 'icons', 'Arachneia.ico')
 scripts_path = os.path.join(application_path,'_internal', 'scripts')
-Ver = "V1.5.0"  # This is the version number for this application.
+Ver = "V2.0.0"  # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
@@ -77,6 +77,21 @@ def convert_pyside2_to_pyqt5(script_path):
     # This could include handling specific method name differences or property changes
     
     return script_code
+
+def load_scripts_from_folder(scripts_folder):
+    script_modules = []
+    for script_path in glob.glob(os.path.join(scripts_folder, '*.py')):
+        module_name = os.path.basename(script_path)[:-3]
+        spec = importlib.util.spec_from_file_location(module_name, script_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        script_modules.append(module)
+    return script_modules
+
+def copy_script_to_folder(self, source_path, destination_folder=scripts_path):
+    if not os.path.exists(destination_folder):
+        os.makedirs(destination_folder)
+    shutil.copy(source_path, destination_folder)
 
 class SettingsWindow(QDialog):
     def __init__(self, mainWindow, scripts):
@@ -173,8 +188,17 @@ class MainWindow(QMainWindow):
 
         self.tab_widget.addTab(QWidget(), "+")
         self.tab_widget.tabBarClicked.connect(self.tabClicked)
-
+        self.loadAndDisplayScripts()
         self.scripts = []  # For storing script paths
+        
+
+    def loadAndDisplayScripts(self):
+        self.scripts = load_scripts_from_folder(scripts_path)
+        # Assuming you have a method to display these scripts or add tabs for them
+        for script_module in self.scripts:
+            # Use the script_module to add tabs or functionality
+            print(f"Loaded script module: {script_module}")
+
     # Method to add the Home tab
     def addHomeTab(self):
         homeTabContent = QWidget()  # Create the widget for the tab content
@@ -235,9 +259,12 @@ class MainWindow(QMainWindow):
 
     def addScript(self, filename):
         """Adds a script to the application and opens a tab for it."""
+        # Copy the script to the scripts folder
+        self.copy_script_to_folder(filename, scripts_path)
+        # Now, load and add the script as a tab
         if filename not in self.scripts:
             self.scripts.append(filename)
-            self.addTabFromScript(filename)  # Ensure this method correctly adds a tab for the script
+            self.addTabFromScript(filename)
 
     # Assuming the issue might be with reinitialization or improper access, ensure that your QTabWidget is always valid
     def removeScript(self, filename):
