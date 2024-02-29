@@ -6,6 +6,8 @@ from PyQt5.QtCore import QSize, QUrl
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --noconsole --windowed --icon=icons/Arachneia.ico --hidden-import=markdown --add-data "icons;icons" --add-data "scripts;scripts" Arachneia.pyw
 
+#test
+
 # Configuration paths and application version
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
