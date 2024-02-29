@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
     def loadScriptsFromFolder(self):
         if os.path.exists(scripts_path):
             for script_file in os.listdir(scripts_path):
-                if script_file.endswith(".py"):
+                if script_file.endswith(".py, .pyw"):
                     full_path = os.path.join(scripts_path, script_file)
                     self.addTabFromScript(full_path)
         else:
@@ -201,7 +201,7 @@ class MainWindow(QMainWindow):
 
     def tabClicked(self, index):
         if self.tab_widget.tabText(index) == "+":
-            filename, _ = QFileDialog.getOpenFileName(self, "Open Script", "", "Python Scripts (*.py)")
+            filename, _ = QFileDialog.getOpenFileName(self, "Open Script", "", "Python Scripts (*.py)(*.pyw)")
             if filename:
                 self.addTabFromScript(filename)
 
