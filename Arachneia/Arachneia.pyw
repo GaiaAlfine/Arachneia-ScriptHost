@@ -14,8 +14,8 @@ if getattr(sys, 'frozen', False):
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
-scripts_path = os.path.join(application_path,'scripts')
+icon_path = os.path.join(application_path,"_internal", 'icons', 'Arachneia.ico')
+scripts_path = os.path.join(application_path,"_internal", 'scripts')
 Ver = "V2.0.0"  # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
