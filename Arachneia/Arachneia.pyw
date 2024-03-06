@@ -14,8 +14,8 @@ if getattr(sys, 'frozen', False):
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-icon_path = os.path.join(application_path,'_internal', 'icons', 'Arachneia.ico')
-scripts_path = os.path.join(application_path,'_internal', 'scripts')
+icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
+scripts_path = os.path.join(application_path,'scripts')
 Ver = "V2.0.0"  # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
@@ -31,27 +31,94 @@ def install_package(package_name):
         print(f"Installing {package_name}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
 
+backgroundColor = '#4d4d4d'
+textColor = '#FFFFFF'
+borderColor = '#8b8b8b'
 
+def apply_dark_stylesheet():
+    stylesheet = """
+    QPushButton{
+        border: 1px solid #8b8b8b;
+        background: #4d4d4d;
+        padding: 10px;
+    }
+    QWidget {
+        background-color: #4d4d4d;
+        color: #ffffff;
+    }
+    QTabWidget::pane { /* The tab widget frame */
+        border: 1px solid #8b8b8b; /* Top border color & thickness */
+        border-left: 1px transparent;
+    }
+    QTabBar::tab {
+        background-color: #4d4d4d;
+        color: #FFFFFF;
+        /* Add left padding or margin to move the tab to the right */
+        padding-left: 1px; /* Adjust the value as needed */
+        border-right: 1px solid #8b8b8b;
+        border-top: 1px solid #8b8b8b;
+        border-bottom: 1px solid #8b8b8b;
+        border-left: 1px solid #8b8b8b;
+    }
+    QTabBar::tab:selected {
+        /* Styles for selected tab */
+        background-color: #4d4d4d;
+        color: #ffffff;
+        border-right: transparent;
+    }
 
-def dark_palette():
-    palette = QPalette()
-    palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    palette.setColor(QPalette.WindowText, QColor(220, 220, 220))
-    palette.setColor(QPalette.Base, QColor(35, 35, 35))
-    palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-    palette.setColor(QPalette.ToolTipBase, QColor(25, 25, 25))
-    palette.setColor(QPalette.ToolTipText, QColor(220, 220, 220))
-    palette.setColor(QPalette.Text, QColor(220, 220, 220))
-    palette.setColor(QPalette.Button, QColor(53, 53, 53))
-    palette.setColor(QPalette.ButtonText, QColor(220, 220, 220))
-    palette.setColor(QPalette.BrightText, QColor(255, 255, 255))
-    palette.setColor(QPalette.Link, QColor(42, 130, 218))
-    palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-    palette.setColor(QPalette.HighlightedText, QColor(0, 0, 0))
-    palette.setColor(QPalette.Disabled, QPalette.Text, QColor(128, 128, 128))
-    palette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(105, 105, 105))
-    palette.setColor(QPalette.Disabled, QPalette.WindowText, QColor(128, 128, 128))
-    return palette
+    QMenuBar {
+        background-color: #4d4d4d;
+        color: #FFFFFF;
+    }
+    QMenuBar::item:selected {
+        background-color: #4d4d4d;
+        color: #FFFFFF;
+    }
+    QMenu {
+        background-color: #4d4d4d;
+        color: #FFFFFF;
+    }
+    QMenu::item:selected {
+        background-color: #4d4d4d;
+        color: #FFFFFF;
+    }
+    QScrollBar:vertical {
+        border: 1px solid #8b8b8b;
+        background: #4d4d4d;
+        width: 15px;
+        margin: 22px 0 22px 0;
+    }
+    QScrollBar::handle:vertical {
+        background: #4d4d4d;
+        min-height: 20px;
+    }
+    QScrollBar::add-line:vertical {
+        border: 1px solid #8b8b8b;
+        background: #4d4d4d;
+        height: 20px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+    }
+    QScrollBar::sub-line:vertical {
+        border: 1px solid #8b8b8b;
+        background: #4d4d4d;
+        height: 20px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+    }
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+        border: 1px solid #8b8b8b;
+        width: 3px;
+        height: 3px;
+        background: #4d4d4d;
+    }
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+        background: none;
+    }
+    """
+    app.setStyleSheet(stylesheet)
+
 
 def convert_pyside2_to_pyqt5(script_path):
     with open(script_path, 'r') as file:
@@ -136,7 +203,7 @@ class MainWindow(QMainWindow):
         
         self.tabWidget = QTabWidget(self)
         self.setCentralWidget(self.tabWidget)
-
+        
         # Options bar setup
         self.menuBar = self.menuBar()
         self.fileMenu = self.menuBar.addMenu('&File')
@@ -281,7 +348,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     QApplication.setStyle(QStyleFactory.create('Fusion'))
-    app.setPalette(dark_palette())
+    apply_dark_stylesheet()
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
