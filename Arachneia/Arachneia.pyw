@@ -14,8 +14,8 @@ if getattr(sys, 'frozen', False):
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-icon_path = os.path.join(application_path,"_internal", 'icons', 'Arachneia.ico')
-scripts_path = os.path.join(application_path,"_internal", 'scripts')
+icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
+scripts_path = os.path.join(application_path,'scripts')
 Ver = "V2.0.0"  # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
@@ -41,15 +41,24 @@ def apply_dark_stylesheet():
         border: 1px solid #8b8b8b;
         background: #4d4d4d;
         padding: 10px;
+        opacity: 50;
+    }
+    QPushButton::hover{
+        border: 1px solid #8b8b8b;
+        background: #5d5d5d;
+        padding: 10px;
+        opacity: 100;
     }
     QWidget {
         background-color: #4d4d4d;
         color: #ffffff;
     }
-    QTabWidget::pane { /* The tab widget frame */
-        border: 1px solid #8b8b8b; /* Top border color & thickness */
-        border-left: 1px transparent;
+    QTabWidget::pane {
+        border: 1px solid #8b8b8b;
+        position: absolute;
+        left: -1px;
     }
+
     QTabBar::tab {
         background-color: #4d4d4d;
         color: #FFFFFF;
@@ -307,14 +316,23 @@ class MainWindow(QMainWindow):
                     tab_content = exec_globals['get_tab_widget']()
                 else:
                     tab_content = QWidget()
-                    
-                tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, script_name)
+
+                # Check for a corresponding icon in the icons folder
+                icon_filename = os.path.join(icon_path, script_name + ".png")
+                if os.path.exists(icon_filename):
+                    # If the icon exists, set it for the tab
+                    tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, "")
+                    self.tab_widget.setTabIcon(tab_index, QIcon(icon_filename))
+                else:
+                    # If no icon is found, set the script name as the tab label
+                    tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, script_name)
+
                 self.tab_widget.setCurrentIndex(tab_index)
-                
                 self.scripts.append(filename)  # Add the script to the list
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error loading script {script_name}: {str(e)}")
             print(f"Error loading script {script_name}: {e}")
+
 
 
     # Assuming the issue might be with reinitialization or improper access, ensure that your QTabWidget is always valid
