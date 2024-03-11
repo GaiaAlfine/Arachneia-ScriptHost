@@ -15,7 +15,7 @@ else:
 App_icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
 icon_path = os.path.join(application_path,'icons')
 scripts_path = os.path.join(application_path,'scripts')
-Ver = "V2.0.0"  # This is the version number for this application.
+Ver = "V2.1.0"  # This is the version number for this application.
 
 sys.argv += ['-platform', 'windows:darkmode=2']
 app = QApplication(sys.argv)
