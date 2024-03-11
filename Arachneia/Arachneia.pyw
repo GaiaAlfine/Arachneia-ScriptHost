@@ -6,15 +6,14 @@ from PyQt5.QtCore import QSize, QUrl
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --noconsole --windowed --icon=icons/Arachneia.ico --hidden-import=markdown --add-data "icons;icons" --add-data "scripts;scripts" Arachneia.pyw
 
-#test
-
 # Configuration paths and application version
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
+App_icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
+icon_path = os.path.join(application_path,'icons')
 scripts_path = os.path.join(application_path,'scripts')
 Ver = "V2.0.0"  # This is the version number for this application.
 
@@ -207,7 +206,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(f"Arachneia - {Ver}")
-        self.setWindowIcon(QIcon(icon_path))
+        self.setWindowIcon(QIcon(App_icon_path))
         self.resize(1000, 600)
         
         self.tabWidget = QTabWidget(self)
