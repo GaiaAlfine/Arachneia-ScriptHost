@@ -30,7 +30,7 @@ def install_package(package_name):
         print(f"Installing {package_name}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
 
-backgroundColor = '#4d4d4d'
+backgroundColor = '#030021'
 textColor = '#FFFFFF'
 borderColor = '#8b8b8b'
 
@@ -38,18 +38,23 @@ def apply_dark_stylesheet():
     stylesheet = """
     QPushButton{
         border: 1px solid #8b8b8b;
-        background: #4d4d4d;
+        background: #030021;
         padding: 10px;
         opacity: 50;
+        border-radius: 5px;  
     }
     QPushButton::hover{
-        border: 1px solid #8b8b8b;
         background: #5d5d5d;
         padding: 10px;
         opacity: 100;
-    }
+    } 
+    QPushButton:checked {
+        background: #252253;
+        padding: 10px;
+        opacity: 100;
+    } 
     QWidget {
-        background-color: #4d4d4d;
+        background-color: #030021;
         color: #ffffff;
     }
     QTabWidget::pane {
@@ -59,7 +64,7 @@ def apply_dark_stylesheet():
     }
 
     QTabBar::tab {
-        background-color: #4d4d4d;
+        background-color: #030021;
         color: #FFFFFF;
         /* Add left padding or margin to move the tab to the right */
         padding-left: 1px; /* Adjust the value as needed */
@@ -70,13 +75,13 @@ def apply_dark_stylesheet():
     }
     QTabBar::tab:selected {
         /* Styles for selected tab */
-        background-color: #4d4d4d;
+        background-color: #030021;
         color: #ffffff;
         border-right: transparent;
     }
 
     QMenuBar {
-        background-color: #4d4d4d;
+        background-color: #030021;
         color: #FFFFFF;
     }
     QMenuBar::item:selected {
@@ -84,7 +89,7 @@ def apply_dark_stylesheet():
         color: #FFFFFF;
     }
     QMenu {
-        background-color: #4d4d4d;
+        background-color: #030021;
         color: #FFFFFF;
     }
     QMenu::item:selected {
@@ -205,7 +210,7 @@ class RotatedTabBar(QTabBar):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(f"Arachneia - {Ver}")
+        self.setWindowTitle(f"Arachneia - {Ver} ({Ver})")
         self.setWindowIcon(QIcon(App_icon_path))
         self.resize(1000, 600)
         
