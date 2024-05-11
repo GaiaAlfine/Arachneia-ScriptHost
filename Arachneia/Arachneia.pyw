@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPalette, QColor, QIcon, QDesktopServices
 from PyQt5.QtCore import QSize, QUrl
 
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
-#pyinstaller --noconsole --windowed --icon=icons/Arachneia.ico --hidden-import=markdown --add-data "icons;icons" --add-data "scripts;scripts" Arachneia.pyw
+#pyinstaller --noconsole --windowed --icon=icons/Arachneia.png --hidden-import=markdown --add-data "icons;icons" --add-data "scripts;scripts" Arachneia.pyw
 
 # Configuration paths and application version
 if getattr(sys, 'frozen', False):
@@ -12,7 +12,7 @@ if getattr(sys, 'frozen', False):
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-App_icon_path = os.path.join(application_path,'icons', 'Arachneia.ico')
+App_icon_path = os.path.join(application_path,'icons', 'Arachneia.png')
 icon_path = os.path.join(application_path,'icons')
 scripts_path = os.path.join(application_path,'scripts')
 Ver = "V2.1.0"  # This is the version number for this application.
@@ -61,15 +61,14 @@ def apply_dark_stylesheet():
         border: 1px solid #8b8b8b;
         position: absolute;
         left: -1px;
+        border-top: 1px solid #8b8b8b;
     }
-
     QTabBar::tab {
         background-color: #030021;
         color: #FFFFFF;
         /* Add left padding or margin to move the tab to the right */
         padding-left: 1px; /* Adjust the value as needed */
         border-right: 1px solid #8b8b8b;
-        border-top: 1px solid #8b8b8b;
         border-bottom: 1px solid #8b8b8b;
         border-left: 1px solid #8b8b8b;
     }
@@ -79,7 +78,9 @@ def apply_dark_stylesheet():
         color: #ffffff;
         border-right: transparent;
     }
-
+    QTabBar{
+        border-top: 1px solid #8b8b8b;
+    }
     QMenuBar {
         background-color: #030021;
         color: #FFFFFF;
@@ -210,7 +211,7 @@ class RotatedTabBar(QTabBar):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(f"Arachneia - {Ver} ({Ver})")
+        self.setWindowTitle(f"Arachneia - {Ver}")
         self.setWindowIcon(QIcon(App_icon_path))
         self.resize(1000, 600)
         
