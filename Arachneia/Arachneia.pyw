@@ -1,7 +1,13 @@
-import sys, os, subprocess, pkg_resources, shutil, platform
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QFileDialog, QWidget, QAction, QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QListWidget, QMessageBox
-from PyQt5.QtGui import QPalette, QColor, QIcon, QDesktopServices
-from PyQt5.QtCore import QSize, QUrl
+# import sys, os, subprocess, pkg_resources, shutil, platform
+# from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QTabBar, QStyleFactory, QFileDialog, QWidget, QAction, QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QListWidget, QMessageBox
+# from PyQt5.QtGui import QPalette, QColor, QIcon, QDesktopServices
+# from PyQt5.QtCore import QSize, QUrl
+
+import  sys, os, subprocess, pkg_resources, shutil, platform
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+
 
 ##DO NOT DELETE THIS. THIS IS THE CODE TO RUN IN THE TURMINAL TO CRATE AN EXE FILE THAT WORKS.
 #pyinstaller --noconsole --windowed --icon=icons/Arachneia.png --hidden-import=markdown --add-data "icons;icons" --add-data "scripts;scripts" Arachneia.pyw
@@ -30,10 +36,6 @@ def install_package(package_name):
         print(f"Installing {package_name}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
 
-backgroundColor = '#030021'
-textColor = '#FFFFFF'
-borderColor = '#8b8b8b'
-
 def apply_dark_stylesheet():
     stylesheet = """
     QPushButton{
@@ -59,6 +61,7 @@ def apply_dark_stylesheet():
     }
     QTabWidget::pane {
         border: 1px solid #8b8b8b;
+        background-color: #030021;  /* Background color for the tab row */
         position: absolute;
         left: -1px;
         border-top: 1px solid #8b8b8b;
@@ -72,14 +75,18 @@ def apply_dark_stylesheet():
         border-bottom: 1px solid #8b8b8b;
         border-left: 1px solid #8b8b8b;
     }
+    QTabBar::tab:first {
+        border-top: 1px solid #8b8b8b;
+    }
     QTabBar::tab:selected {
         /* Styles for selected tab */
         background-color: #030021;
         color: #ffffff;
         border-right: transparent;
     }
-    QTabBar{
+    QTabBar {
         border-top: 1px solid #8b8b8b;
+        background-color: #030021;  /* Background color for the tab row */
     }
     QMenuBar {
         background-color: #030021;
@@ -97,42 +104,12 @@ def apply_dark_stylesheet():
         background-color: #4d4d4d;
         color: #FFFFFF;
     }
-    QScrollBar:vertical {
-        border: 1px solid #8b8b8b;
-        background: #4d4d4d;
-        width: 15px;
-        margin: 22px 0 22px 0;
-    }
-    QScrollBar::handle:vertical {
-        background: #4d4d4d;
-        min-height: 20px;
-    }
-    QScrollBar::add-line:vertical {
-        border: 1px solid #8b8b8b;
-        background: #4d4d4d;
-        height: 20px;
-        subcontrol-position: bottom;
-        subcontrol-origin: margin;
-    }
-    QScrollBar::sub-line:vertical {
-        border: 1px solid #8b8b8b;
-        background: #4d4d4d;
-        height: 20px;
-        subcontrol-position: top;
-        subcontrol-origin: margin;
-    }
-    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
-        border: 1px solid #8b8b8b;
-        width: 3px;
-        height: 3px;
-        background: #4d4d4d;
-    }
-    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-        background: none;
+    QTabBar::scroller {
+        width: 0;
+        height: 0;
     }
     """
     app.setStyleSheet(stylesheet)
-
 
 def convert_pyside2_to_pyqt5(script_path):
     with open(script_path, 'r') as file:
@@ -338,8 +315,6 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Error", f"Error loading script {script_name}: {str(e)}")
             print(f"Error loading script {script_name}: {e}")
 
-
-
     # Assuming the issue might be with reinitialization or improper access, ensure that your QTabWidget is always valid
     def removeScript(self, filename):
         if filename in self.scripts:
@@ -361,8 +336,6 @@ class MainWindow(QMainWindow):
                 if self.tab_widget.tabText(i) == os.path.basename(filename)[:-3]:
                     self.tab_widget.removeTab(i)
                     break
-
-
 
     def openSettings(self):
         """Opens the settings window, passing in the current scripts and a reference to self."""
