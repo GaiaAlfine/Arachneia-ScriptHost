@@ -1,0 +1,10 @@
+# .gitignore content to ignore specific folders and files
+
+# Ignore the build folder
+Arachneia/build/
+
+# Ignore the dist folder
+Arachneia/dist/
+
+# Ignore the Arachneia.spec file
+Arachneia/Arachneia.spec
