@@ -254,6 +254,10 @@ class MainWindow(QMainWindow):
                 else:
                     tab_index = self.tab_widget.insertTab(self.tab_widget.count() - 1, tab_content, script_name)
 
+                # Store the script name as a tooltip so it can be identified
+                # later even when the tab only displays an icon
+                self.tab_widget.setTabToolTip(tab_index, script_name)
+
                 self.tab_widget.setCurrentIndex(tab_index)
                 self.scripts.append(filename)
                 self.scriptListWidget.addItem(filename)
@@ -275,7 +279,12 @@ class MainWindow(QMainWindow):
             self.scripts.remove(filename)
 
             for i in range(self.tab_widget.count() - 1, -1, -1):
-                if self.tab_widget.tabText(i) == os.path.basename(filename)[:-3]:
+                tab_text = self.tab_widget.tabText(i)
+                tab_tooltip = self.tab_widget.tabToolTip(i)
+                if (
+                    tab_text == os.path.basename(filename)[:-3]
+                    or tab_tooltip == os.path.basename(filename)[:-3]
+                ):
                     self.tab_widget.removeTab(i)
                     break
 
