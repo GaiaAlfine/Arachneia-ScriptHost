@@ -16,7 +16,10 @@ icon_path = os.path.join(application_path, 'icons')
 scripts_path = os.path.join(application_path, 'scripts')
 Ver = "V0.8.1"
 
-sys.argv += ['-platform', 'windows:darkmode=2']
+# Use Windows dark mode setting only when running on Windows.
+if sys.platform.startswith("win"):
+    sys.argv += ['-platform', 'windows:darkmode=2']
+
 app = QApplication(sys.argv)
 
 def install_package(package_name):
